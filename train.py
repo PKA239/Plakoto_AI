@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import Backgammon
 from Backgammon import *
 import kotra
+import psai
 import randomAgent
 import time
 
@@ -21,8 +22,8 @@ def evaluate(agent, evaluation_agent, n_eval, n_games):
     print("Win-rate after training for "+str(n_games)+" games: "+str(winrate)+"%" )
     return winrate
 
-def train(n_games=1000, n_epochs=199, n_eval=50, show=False):
-    agent = kotra
+def train(n_games=100, n_epochs=30, n_eval=10, show=False):
+    agent = psai
     evaluation_agent = randomAgent
     pygame.quit()
     winrates = []
