@@ -18,6 +18,7 @@ import time
 import time
 #import pubeval
 import kotra
+#from goto import label,goto
 
 def init_board():
     # initializes the game board
@@ -233,7 +234,7 @@ def play_a_game(user_exists, player1, player2, train=False, train_config=None, c
         for i in range(1+int(dice[0] == dice[1])):
             board_copy = np.copy(board) 
             
-            x, y = eventloop()          
+            x, y = eventloop(user_exists)          
               
             
             if train:
@@ -242,7 +243,7 @@ def play_a_game(user_exists, player1, player2, train=False, train_config=None, c
                     
                     if user_exists: 
                         #x, y =  eventloop(user_exists)
-                        move = user_action(board_copy,dice,player,i,train=train,train_config=train_config)
+                        move = user_action(x, y, board_copy,dice,player,i,train=train,train_config=train_config)
                     else:
                         #eventloop(user_exists)
                         move = player1.action(board_copy,dice,player,i,train=train,train_config=train_config) 
@@ -255,7 +256,7 @@ def play_a_game(user_exists, player1, player2, train=False, train_config=None, c
                 if player == 1:
                     if user_exists: 
                         #x, y =  eventloop(user_exists)
-                        move = user_action(board_copy,dice,player,i)
+                        move = user_action(x, y, board_copy,dice,player,i)
                     else:
                         #eventloop(user_exists)
                         move = player1.action(board_copy,dice,player,i) 
@@ -430,16 +431,17 @@ dice5 = pygame.transform.scale(dice5, (60, 60))
 dice6 = pygame.image.load('dice6.png')
 dice6 = pygame.transform.scale(dice6, (60, 60))
 screen = pygame.display.set_mode((width, height))
-
+pygame.display.set_caption('Backgammon - Plakoto')
+pygame.display.set_icon(pygame.image.load("dice6.png"))
 
 #-------------The user Agent -----------------------------------------    
 
-def user_action(board_copy,dice,player,i):
+def user_action(x, y, board_copy,dice,player,i):
     # user agent
     # inputs are the board, the dice and which player is to move
     # outputs the chosen move accordingly to mouse input
 
-    
+    #eventloop(user_exists)
     # check out the legal moves available for the throw
     possible_moves, possible_boards = legal_moves(board_copy, dice, player)
 
@@ -455,35 +457,61 @@ def user_action(board_copy,dice,player,i):
 
 
 # ------------ Event loop -----------------------------------------------
-def eventloop():
-    # Event loop
-    x = np.nan
-    y = np.nan
-    #while True:
-    for event in pygame.event.get(): 
-       
-        
+def eventloop_help(event):
+     # General check
         if (event.type == MOUSEBUTTONUP):
            None
             
         elif event.type == pygame.QUIT:
             pygame.quit()
-            
-                   
-          
-        elif (event.type == pygame.MOUSEBUTTONDOWN):   
-            #print(event.type)                 
-            mouse_presses = pygame.mouse.get_pressed()
-            
-            # Only if left mouse key is pressed the input is considered valid
-            if mouse_presses[0]:
-                print("Left Mouse key was clicked")      
-                x , y = pygame.mouse.get_pos()
-                print("Position of mousebuttons", x , y)
-            
-        
     
-    return x, y
+def eventloop(user_exists):
+    # Event loop
+    x = np.nan
+    y = np.nan
+    continue_loop = True
+    
+    if user_exists:     
+        
+        while continue_loop:  
+            
+            for event in pygame.event.get():               
+                if (event.type == MOUSEBUTTONUP):
+                    None
+            
+                elif event.type == pygame.QUIT:
+                    pygame.quit()                         
+                                
+                elif (event.type == pygame.MOUSEBUTTONDOWN):                                      
+                    mouse_presses = pygame.mouse.get_pressed()                    
+                    # Only if left mouse key is pressed, the input is considered valid
+                    if mouse_presses[0]:
+                        print("Left Mouse key was clicked")      
+                        x , y = pygame.mouse.get_pos()
+                        print("Position of mousebuttons", x , y)
+                        continue_loop = False
+                        return x, y                        
+                    
+                    elif mouse_presses[0] == False:
+                        time.sleep(1)                
+                        screen.blit(font.render("Please left-click on a field.", False, (255, 100, 100)), (0,0))
+                """
+                else:
+                     time.sleep(1)                
+                     screen.blit(font.render("Please left-click on a field.", False, (255, 100, 100)), (0,0))"""
+                
+    else:
+      
+        for event in pygame.event.get(): 
+           
+            if (event.type == MOUSEBUTTONUP):
+                None
+            
+            elif event.type == pygame.QUIT:
+                pygame.quit()                     
+        return x, y
+              
+
     
 def main(show = False, user_exists = False):  
     
