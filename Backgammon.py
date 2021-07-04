@@ -302,12 +302,30 @@ def showBoard(board, dice):
         if color == 1: screen.blit(blackChecker, (x, y))
         if color == 0: print("color not set")
 
+    def putDice1(eyes):
+        if eyes == 1: screen.blit(dice1, (580, 334))
+        if eyes == 2: screen.blit(dice2, (582, 332))
+        if eyes == 3: screen.blit(dice3, (585, 331))
+        if eyes == 4: screen.blit(dice4, (581, 334))
+        if eyes == 5: screen.blit(dice5, (586, 332))
+        if eyes == 6: screen.blit(dice6, (587, 335))
+
+    def putDice2(eyes):
+        if eyes == 1: screen.blit(dice1, (647, 332))
+        if eyes == 2: screen.blit(dice2, (641, 330))
+        if eyes == 3: screen.blit(dice3, (645, 335))
+        if eyes == 4: screen.blit(dice4, (640, 331))
+        if eyes == 5: screen.blit(dice5, (643, 336))
+        if eyes == 6: screen.blit(dice6, (640, 330))
+
     screen.fill([255, 255, 255])
     screen.blit(boardImg, (0,0))
-    dice1 = font.render(str(dice[0]), False, (255, 255, 255))
-    dice2 = font.render(str(dice[1]), False, (255, 255, 255))
-    screen.blit(dice1, (620, 340))
-    screen.blit(dice2, (650, 340))
+    putDice1(dice[0])
+    putDice2(dice[1])
+    #dice1 = font.render(str(dice[0]), False, (255, 255, 255))
+    #dice2 = font.render(str(dice[1]), False, (255, 255, 255))
+    #screen.blit(dice1, (620, 340))
+    #screen.blit(dice2, (650, 340))
 
     x = 55
     for i in range(1, 13):
@@ -368,12 +386,24 @@ pygame.font.init()
 font = pygame.font.SysFont('Arial', 30)
 width = 1280
 height = 720
-boardImg = pygame.image.load('board.gif')
+boardImg = pygame.image.load('board2.png')
 boardImg = pygame.transform.scale(boardImg, (1280, 720))
 blackChecker = pygame.image.load('blackChecker.png')
 blackChecker = pygame.transform.scale(blackChecker, (55, 55))
 whiteChecker = pygame.image.load('whiteChecker.png')
 whiteChecker = pygame.transform.scale(whiteChecker, (55, 55))
+dice1 = pygame.image.load('dice1.png')
+dice1 = pygame.transform.scale(dice1, (60, 60))
+dice2 = pygame.image.load('dice2.png')
+dice2 = pygame.transform.scale(dice2, (60, 60))
+dice3 = pygame.image.load('dice3.png')
+dice3 = pygame.transform.scale(dice3, (60, 60))
+dice4 = pygame.image.load('dice4.png')
+dice4 = pygame.transform.scale(dice4, (60, 60))
+dice5 = pygame.image.load('dice5.png')
+dice5 = pygame.transform.scale(dice5, (60, 60))
+dice6 = pygame.image.load('dice6.png')
+dice6 = pygame.transform.scale(dice6, (60, 60))
 screen = pygame.display.set_mode((width, height))
 def main(show=False):
     if not show: screen = pygame.quit()
