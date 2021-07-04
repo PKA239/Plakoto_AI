@@ -11,7 +11,9 @@ so make sure your changes here won't affect his performance.
 import numpy as np
 import matplotlib.pyplot as plt
 import randomAgent
+import userAgent
 import pygame
+from pygame.locals import *
 import time
 # import sys
 import time
@@ -216,7 +218,7 @@ def valid_move(move,board_copy,dice,player,i):
     # print(type(move))
     return True
     
-def play_a_game(player1, player2, train=False, train_config=None, commentary = False, show=False):
+def play_a_game(user_exists, player1, player2, train=False, train_config=None, commentary = False, show=False):
     board = init_board() # initialize the board
     player = np.random.randint(2)*2-1 # which player begins?
     
@@ -233,13 +235,22 @@ def play_a_game(player1, player2, train=False, train_config=None, commentary = F
             board_copy = np.copy(board) 
             
             if train:
+                
                 if player == 1:
-                    move = player1.action(board_copy,dice,player,i,train=train,train_config=train_config) 
+                    if user_exists: 
+                        move = user_action(user_exists, board_copy,dice,player,i,train=train,train_config=train_config)
+                    else:
+                        move = player1.action(board_copy,dice,player,i,train=train,train_config=train_config) 
+                
                 elif player == -1:
                     move = player2.action(board_copy,dice,player,i,train=train,train_config=train_config)
             else:
                 if player == 1:
-                    move = player1.action(board_copy,dice,player,i) 
+                    if user_exists: 
+                        move = user_action(user_exists, board_copy,dice,player,i)
+                    else:
+                        move = player1.action(board_copy,dice,player,i) 
+                        
                 elif player == -1:
                     move = player2.action(board_copy,dice,player,i)
 
@@ -363,7 +374,11 @@ def showBoard(board, dice):
 
     pygame.display.update()
 
+
+
+# ----------- The Pygame globals -------------------------------------
 pygame.init()
+pygame.display.init()
 pygame.font.init()
 font = pygame.font.SysFont('Arial', 30)
 width = 1280
@@ -375,29 +390,123 @@ blackChecker = pygame.transform.scale(blackChecker, (55, 55))
 whiteChecker = pygame.image.load('whiteChecker.png')
 whiteChecker = pygame.transform.scale(whiteChecker, (55, 55))
 screen = pygame.display.set_mode((width, height))
-def main(show=False):
+
+
+#-------------The user Agent -----------------------------------------    
+
+def user_action(user_exists, board_copy,dice,player,i):
+    # user agent
+    # inputs are the board, the dice and which player is to move
+    # outputs the chosen move accordingly to mouse input
+
+    x , y =   eventloop(user_exists)
+    # check out the legal moves available for the throw
+    possible_moves, possible_boards = legal_moves(board_copy, dice, player)
+
+    # if there are no moves available
+    if len(possible_moves) == 0:
+        return []
+
+    
+    move = possible_moves[np.random.randint(len(possible_moves))]
+    
+
+    return move
+
+
+# ------------ Event loop -----------------------------------------------
+def eventloop(user_exists):
+    # Event loop
+    while True:
+        for event in pygame.event.get():    
+            
+            if (event.type == MOUSEBUTTONUP and user_exists == False ):
+                None 
+                
+            elif event.type == pygame.QUIT:
+                pygame.quit()
+            #if event.type== pygame.QUIT:
+            #    print("Error")
+               # AttributeError: 'module' object has no attribute 'QUIT'                
+              
+            elif (event.type == pygame.MOUSEBUTTONDOWN and user_exists == True ):                    
+                mouse_presses = pygame.mouse.get_pressed()
+                
+                # Only if left mouse key is pressed the input is considered valid
+                if mouse_presses[0]:
+                    print("Left Mouse key was clicked")      
+                    x , y = pygame.mouse.get_pos()
+                    print("Position of mousebuttons", x , y)
+                    return x, y
+    
+def main(show = False, user_exists = False):  
+    
+    
     if not show: screen = pygame.quit()
     startTime=time.time()
     winners = {}; winners["1"]=0; winners["-1"]=0; winners["0"]=0 # Collecting stats of the games
     nGames = 1 # how many games?
     performance = list()
-    player1 = randomAgent
-    player2 = randomAgent
+    
+    if user_exists:
+        player1 = user_action
+    else: 
+        player1 = randomAgent
+        
+    player2 = randomAgent #Player 2 is always randomAgent
+    
     wins = 0
     nEpochs = 1_000
     
+    #----------------------------------------------------------------------------------------------
     
+  
     
+    # Play game
     print("Playing "+str(nGames)+" between"+str(player1)+"1 and "+str(player2)+"-1")
-    for g in range(nGames):
-        #print("playing game number: " + str(g))
-        if g % nEpochs == 0:
-            performance = log_status(g, wins, performance, nEpochs)
-            wins = 0
-        winner, board = play_a_game(player1, player2, False, None, False, show=show) # g, commentary=False)
-        #winners[str(winner[0])] += 1
-        winners[str(winner)] += 1
-        wins += (winner==1)
+    
+    if user_exists == False:
+        for g in range(nGames):
+                    
+            print("playing game number: " + str(g))
+            if g % nEpochs == 0:
+                
+                
+                performance = log_status(g, wins, performance, nEpochs)
+                wins = 0
+           
+            
+            winner, board = play_a_game(player1, player2, False, None, False, show=show) # g, commentary=False)
+            
+            winners[str(winner)] += 1
+            wins += (winner==1)
+            
+            eventloop(user_exists)
+    else:
+        
+        for g in range(nGames):
+                    
+            print("playing game number: " + str(g))
+            if g % nEpochs == 0:
+                
+                
+                performance = log_status(g, wins, performance, nEpochs)
+                wins = 0
+           
+            
+            winner, board = play_a_game(user_exists, player1, player2, False, None, False, show=show) # g, commentary=False)
+            
+            winners[str(winner)] += 1
+            wins += (winner==1)
+            #eventloop(user_exists)
+            
+          
+        
+        
+        
+        
+        
+        
     print("Out of", nGames, "games,")
     print("player", 1, "won", winners["1"],"times and")
     print("player", -1, "won", winners["-1"],"times and")
@@ -409,62 +518,11 @@ def main(show=False):
 
     #time.sleep(5)
     #time.sleep(60*60)
-    mousetest()
 
 
-def mousetest():
-    # https://www.pygame.org/docs/ref/mouse.html
-    while True:
-      for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-               pygame.quit()
-               return
-            elif event.type == pygame.MOUSEWHEEL:
-               print(event)
-               print(event.x, event.y)
-               print(event.flipped)
-               print(event.which)
-               # can access properties with
-               # proper notation(ex: event.y)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_presses = pygame.mouse.get_pressed()
-                if mouse_presses[0]:
-                    print("Left Mouse key was clicked")
-                    print("Position of mousebuttons", pygame.mouse.get_pos)
-      clock.tick(60)
-    #print("State of mousebuttons", pygame.mouse.get_pressed)
-    #print("Position of mousebuttons", pygame.mouse.get_pos)
+
     
     
 if __name__ == '__main__':
     main(show=True)
 
-
-    #testboard = np.zeros(29 + 28)  # 29
-    #testboard[1] = -15
-    #testboard[2] = -1
-    #testboard[3] = -2
-    #testboard[3+28] = 1
-    #testboard[4] = -4
-    #testboard[5] = -4
-    #testboard[6] = -4
-    #testboard[7] = -4
-    #testboard[8] = -4
-    #testboard[9] = -4
-    #testboard[10] = -4
-    #testboard[11] = -4
-    #testboard[12] = -4
-    #testboard[13] = 5
-    #testboard[14] = 2
-    #testboard[14+28] = -1
-    #testboard[15] = 6
-    #testboard[16] = 6
-    #testboard[17] = 6
-    #testboard[18] = 6
-    #testboard[19] = 6
-    #testboard[20] = 6
-    #testboard[21] = 6
-    #testboard[22] = 6
-    #testboard[23] = 6
-    #testboard[24] = 15
-    #showBoard(testboard)
