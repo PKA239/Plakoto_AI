@@ -22,7 +22,7 @@ def evaluate(agent, evaluation_agent, n_eval, n_games):
     print("Win-rate after training for "+str(n_games)+" games: "+str(winrate)+"%" )
     return winrate
 
-def train(n_games=100, n_epochs=30, n_eval=10, show=False):
+def train(n_games=1001, n_epochs=100, n_eval=20, show=False):
     agent = psai
     evaluation_agent = randomAgent
     pygame.quit()
