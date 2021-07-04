@@ -11,7 +11,6 @@ so make sure your changes here won't affect his performance.
 import numpy as np
 import matplotlib.pyplot as plt
 import randomAgent
-import userAgent
 import pygame
 from pygame.locals import *
 import time
@@ -234,24 +233,35 @@ def play_a_game(user_exists, player1, player2, train=False, train_config=None, c
         for i in range(1+int(dice[0] == dice[1])):
             board_copy = np.copy(board) 
             
+            x, y = eventloop()          
+              
+            
             if train:
                 
                 if player == 1:
+                    
                     if user_exists: 
-                        move = user_action(user_exists, board_copy,dice,player,i,train=train,train_config=train_config)
+                        #x, y =  eventloop(user_exists)
+                        move = user_action(board_copy,dice,player,i,train=train,train_config=train_config)
                     else:
+                        #eventloop(user_exists)
                         move = player1.action(board_copy,dice,player,i,train=train,train_config=train_config) 
                 
                 elif player == -1:
+                    #eventloop(user_exists)
                     move = player2.action(board_copy,dice,player,i,train=train,train_config=train_config)
+            
             else:
                 if player == 1:
                     if user_exists: 
-                        move = user_action(user_exists, board_copy,dice,player,i)
+                        #x, y =  eventloop(user_exists)
+                        move = user_action(board_copy,dice,player,i)
                     else:
+                        #eventloop(user_exists)
                         move = player1.action(board_copy,dice,player,i) 
                         
                 elif player == -1:
+                    #eventloop(user_exists)                    
                     move = player2.action(board_copy,dice,player,i)
 
             # check if the move is valid
@@ -424,12 +434,12 @@ screen = pygame.display.set_mode((width, height))
 
 #-------------The user Agent -----------------------------------------    
 
-def user_action(user_exists, board_copy,dice,player,i):
+def user_action(board_copy,dice,player,i):
     # user agent
     # inputs are the board, the dice and which player is to move
     # outputs the chosen move accordingly to mouse input
 
-    x , y =   eventloop(user_exists)
+    
     # check out the legal moves available for the throw
     possible_moves, possible_boards = legal_moves(board_copy, dice, player)
 
@@ -445,29 +455,35 @@ def user_action(user_exists, board_copy,dice,player,i):
 
 
 # ------------ Event loop -----------------------------------------------
-def eventloop(user_exists):
+def eventloop():
     # Event loop
-    while True:
-        for event in pygame.event.get():    
+    x = np.nan
+    y = np.nan
+    #while True:
+    for event in pygame.event.get(): 
+       
+        
+        if (event.type == MOUSEBUTTONUP):
+           None
             
-            if (event.type == MOUSEBUTTONUP and user_exists == False ):
-                None 
-                
-            elif event.type == pygame.QUIT:
-                pygame.quit()
-            #if event.type== pygame.QUIT:
-            #    print("Error")
-               # AttributeError: 'module' object has no attribute 'QUIT'                
-              
-            elif (event.type == pygame.MOUSEBUTTONDOWN and user_exists == True ):                    
-                mouse_presses = pygame.mouse.get_pressed()
-                
-                # Only if left mouse key is pressed the input is considered valid
-                if mouse_presses[0]:
-                    print("Left Mouse key was clicked")      
-                    x , y = pygame.mouse.get_pos()
-                    print("Position of mousebuttons", x , y)
-                    return x, y
+        elif event.type == pygame.QUIT:
+            pygame.quit()
+            
+                   
+          
+        elif (event.type == pygame.MOUSEBUTTONDOWN):   
+            #print(event.type)                 
+            mouse_presses = pygame.mouse.get_pressed()
+            
+            # Only if left mouse key is pressed the input is considered valid
+            if mouse_presses[0]:
+                print("Left Mouse key was clicked")      
+                x , y = pygame.mouse.get_pos()
+                print("Position of mousebuttons", x , y)
+            
+        
+    
+    return x, y
     
 def main(show = False, user_exists = False):  
     
@@ -477,22 +493,14 @@ def main(show = False, user_exists = False):
     winners = {}; winners["1"]=0; winners["-1"]=0; winners["0"]=0 # Collecting stats of the games
     nGames = 100 # how many games?
     performance = list()
-#<<<<<<< HEAD
-    
+
     if user_exists:
         player1 = user_action
     else: 
         player1 = randomAgent
         
     player2 = randomAgent #Player 2 is always randomAgent
-    
-#=======
-    #player1 = kotra
-    #player2 = randomAgent
-
-    #player1.loadModel('kotra_weights/DQN_760000/DQN_760000')
-
-#>>>>>>> 18825eb60fca6cbbce7a80eefa83aaba82237ae1
+ 
     wins = 0
     nEpochs = 1_000
     
@@ -503,42 +511,21 @@ def main(show = False, user_exists = False):
     # Play game
     print("Playing "+str(nGames)+" between"+str(player1)+"1 and "+str(player2)+"-1")
     
-    if user_exists == False:
-        for g in range(nGames):
-                    
-            print("playing game number: " + str(g))
-            if g % nEpochs == 0:
+   
+    for g in range(nGames):
                 
-                
-                performance = log_status(g, wins, performance, nEpochs)
-                wins = 0
-           
+        print("playing game number: " + str(g))
+        if g % nEpochs == 0:
             
-            winner, board = play_a_game(player1, player2, False, None, False, show=show) # g, commentary=False)
             
-            winners[str(winner)] += 1
-            wins += (winner==1)
-            
-            eventloop(user_exists)
-    else:
+            performance = log_status(g, wins, performance, nEpochs)
+            wins = 0
+       
         
-        for g in range(nGames):
-                    
-            print("playing game number: " + str(g))
-            if g % nEpochs == 0:
-                
-                
-                performance = log_status(g, wins, performance, nEpochs)
-                wins = 0
-           
-            
-            winner, board = play_a_game(user_exists, player1, player2, False, None, False, show=show) # g, commentary=False)
-            
-            winners[str(winner)] += 1
-            wins += (winner==1)
-            #eventloop(user_exists)
-            
-          
+        winner, board = play_a_game(user_exists, player1, player2, False, None, False, show=show) # g, commentary=False)
+        
+        winners[str(winner)] += 1
+        wins += (winner==1)       
         
         
         
@@ -563,7 +550,3 @@ def main(show = False, user_exists = False):
     
 if __name__ == '__main__':
     main(show=True)
-#<<<<<<< HEAD
-
-#=======
-#>>>>>>> 18825eb60fca6cbbce7a80eefa83aaba82237ae1
