@@ -6,6 +6,7 @@ see flipped_agent for an example of how to flip the board in order to always
 perceive the board as player 1
 """
 import numpy as np
+
 import Backgammon
 
 import tensorflow as tf
@@ -27,11 +28,15 @@ class config:
 print('Model initialized with parameters:','\n'*2, config, '\n'*2)
 
 # Policy Network | Deep Q-network
-DQN = keras.Sequential([
-    layers.Dense(50, activation='relu', kernel_initializer='random_uniform', input_shape=(config.nS,)),
-    layers.Dense(16, activation='relu', kernel_initializer='random_uniform'),
-    layers.Dense(1, activation='sigmoid', kernel_initializer='random_uniform')
-])
+DQN = keras.Sequential()
+DQN.add(layers.Dense(100, input_shape=(49,), activation='sigmoid'))
+DQN.add(layers.Dense(1, activation='sigmoid'))
+
+#DQN = keras.Sequential([
+#    layers.Dense(50, activation='relu', kernel_initializer='random_uniform', input_shape=(config.nS,)),
+#    layers.Dense(1, activation='sigmoid', kernel_initializer='random_uniform')
+#])
+
 DQN.compile(optimizer = 'Adam',loss = 'mse')
 
 # Target network. Gets copied from policy-network at certain intervals
@@ -44,7 +49,6 @@ replay_buffer_bearing_off = BasicBuffer(config.D_max)
 
 # for tracking progress
 counter = 0
-bearing_off_counter = 0
 saved_models = []
 
 print("Network architecture: \n", DQN)
@@ -62,11 +66,10 @@ def flip_board(board_copy):
     return flipped_board
 
 def flip_move(move):
+    #flips move
     if len(move)!=0:
         for m in move:
             for m_i in range(2):
-                #m[m_i] = np.array([0,24,23,22,21,20,19,18,17,16,15,14,13,
-                #                12,11,10,9,8,7,6,5,4,3,2,1,26,25,28,27])[m[m_i]]
                 m[m_i] = np.array([0,24,23,22,21,20,19,18,17,16,15,14,13,
                         12,11,10,9,8,7,6,5,4,3,2,1,
                         48,47,46,45,44,43,42,41,40,39,38,37,
@@ -81,17 +84,9 @@ game_won      = lambda board: int(board[49]>=15 or (board[1+24] == -1 and board[
 def game_over_update(board, reward):
     target = np.array([[reward]])
     S = np.array([board_2_state(board, 1)])
-    #buffer = D if not bearing_off(board) else D_bearing_off
     replay_buffer.push(S, None, reward, S, target, done=True)
-    # print("game over update:")
-    # Backgammon.pretty_print(board)
-    # print("reward: ", reward)
 
 def action(board_copy,dice,player,i, train=False,train_config=None):
-    """
-        inputs are the board, the dice and which player is to move
-        outputs the chosen move accordingly to its policy
-        """
 
     # global variables
     global counter
@@ -111,11 +106,6 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
     #if not bearing_off(board_copy):
     model = DQN
     buffer = replay_buffer
-    #else:
-    #    model = DQN_bearing_off
-    #    buffer = D_bearing_off
-    #    bearing_off_counter += 1
-
     # Current state and Q value, possible next states
     S = np.array([board_2_state(board_copy, i == 2)])  # i -> second dice?
     Q = model(S)
@@ -139,10 +129,7 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         S_prime = np.array([board_2_state(possible_boards[action], first_of_2)])
 
         # update Target network
-        #if not bearing_off(possible_boards[action]):
         target_model = DQN_target
-        #else:
-        #    target_model = DQN_bearing_off_target
         Q_max = target_model(S_prime)
 
         # Das Kernstück des ganzen
@@ -158,10 +145,8 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         if counter % config.batch_size == 0 and counter > 0: #and bearing_off_counter > config.batch_size
             state_batch, action_batch, reward_batch, next_state_batch, target_batch, done_batch = replay_buffer.sample(
                 config.batch_size)
+
             DQN.train_on_batch(np.array(state_batch), np.array(target_batch))
-            #state_batch, action_batch, reward_batch, next_state_batch, target_batch, done_batch = D_bearing_off.sample(
-            #    config.batch_size)
-            #DQN_bearing_off.train_on_batch(np.array(state_batch), np.array(target_batch))
 
         # save model every 1000_000 training moves
         if counter % 100000 == 0 and not counter in saved_models and counter != 0:
@@ -169,11 +154,6 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
             filepath = "./kotra_weights/DQN_" + str(counter)
             print("saving weights in file:" + filepath)
             DQN.save(filepath, overwrite=True, include_optimizer=True)
-
-            #filepath += "bearing_off"
-            #print("saving bearing-off-weights in file:" + filepath)
-            #DQN_bearing_off.save(filepath, overwrite=True, include_optimizer=True)
-            #saved_models.append(counter)
 
         counter += 1
 
