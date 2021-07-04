@@ -17,6 +17,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow.keras.models import *
 from Backgammon import *
 
 # TODO: make your own or cite the thing
@@ -75,6 +76,9 @@ bearing_off_counter = 0
 saved_models = []
 
 print("Network architecture: \n", DQN)
+
+def loadModel(file):
+    DQN.load_weights(file)
 
 # ------------------------------- Helper functions ---------------------------------
 def pretty_print(board):
@@ -210,6 +214,7 @@ def action(board_copy,dice,player,i,train=False,train_config=None):
             print("saving bearing-off-weights in file:"+filepath)
             DQN_bearing_off.save(filepath, overwrite=True, include_optimizer=True)
             saved_models.append(counter)
+
 
         counter += 1
 
