@@ -125,6 +125,8 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
     # Find best action and it's q-value w/ epsilon-greedy
     Q_primes = model(S_primes)  # q-value per state
     action = np.argmax(Q_primes)
+    
+    
     if train and np.random.rand() < config.eps:  # epsilon-greedy when training
         action = np.random.randint(len(possible_moves))
 

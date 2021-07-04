@@ -385,6 +385,9 @@ def main(show=False):
     player2 = randomAgent
     wins = 0
     nEpochs = 1_000
+    
+    
+    
     print("Playing "+str(nGames)+" between"+str(player1)+"1 and "+str(player2)+"-1")
     for g in range(nGames):
         #print("playing game number: " + str(g))
@@ -404,7 +407,34 @@ def main(show=False):
     print("average time:", runTime/nGames)
     plot_perf(performance)
 
-    time.sleep(60*60)
+    #time.sleep(5)
+    #time.sleep(60*60)
+    mousetest()
+
+
+def mousetest():
+    # https://www.pygame.org/docs/ref/mouse.html
+    while True:
+      for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+               pygame.quit()
+               return
+            elif event.type == pygame.MOUSEWHEEL:
+               print(event)
+               print(event.x, event.y)
+               print(event.flipped)
+               print(event.which)
+               # can access properties with
+               # proper notation(ex: event.y)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_presses = pygame.mouse.get_pressed()
+                if mouse_presses[0]:
+                    print("Left Mouse key was clicked")
+                    print("Position of mousebuttons", pygame.mouse.get_pos)
+      clock.tick(60)
+    #print("State of mousebuttons", pygame.mouse.get_pressed)
+    #print("Position of mousebuttons", pygame.mouse.get_pos)
+    
     
 if __name__ == '__main__':
     main(show=True)
