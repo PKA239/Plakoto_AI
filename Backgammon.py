@@ -253,7 +253,7 @@ def play_a_game(player1, player2, train=False, train_config=None, commentary = F
                 for m in move:
                     if show:
                         showBoard(board, dice)
-                        time.sleep(0.05)
+                        time.sleep(0.5)
                     board = update_board(board, m, player)
                     if show:
                         showBoard(board, dice)
@@ -379,10 +379,13 @@ def main(show=False):
     if not show: screen = pygame.quit()
     startTime=time.time()
     winners = {}; winners["1"]=0; winners["-1"]=0; winners["0"]=0 # Collecting stats of the games
-    nGames = 1 # how many games?
+    nGames = 100 # how many games?
     performance = list()
-    player1 = randomAgent
+    player1 = kotra
     player2 = randomAgent
+
+    player1.loadModel('kotra_weights/DQN_760000/DQN_760000')
+
     wins = 0
     nEpochs = 1_000
     print("Playing "+str(nGames)+" between"+str(player1)+"1 and "+str(player2)+"-1")
@@ -408,33 +411,3 @@ def main(show=False):
     
 if __name__ == '__main__':
     main(show=True)
-
-
-    #testboard = np.zeros(29 + 28)  # 29
-    #testboard[1] = -15
-    #testboard[2] = -1
-    #testboard[3] = -2
-    #testboard[3+28] = 1
-    #testboard[4] = -4
-    #testboard[5] = -4
-    #testboard[6] = -4
-    #testboard[7] = -4
-    #testboard[8] = -4
-    #testboard[9] = -4
-    #testboard[10] = -4
-    #testboard[11] = -4
-    #testboard[12] = -4
-    #testboard[13] = 5
-    #testboard[14] = 2
-    #testboard[14+28] = -1
-    #testboard[15] = 6
-    #testboard[16] = 6
-    #testboard[17] = 6
-    #testboard[18] = 6
-    #testboard[19] = 6
-    #testboard[20] = 6
-    #testboard[21] = 6
-    #testboard[22] = 6
-    #testboard[23] = 6
-    #testboard[24] = 15
-    #showBoard(testboard)
