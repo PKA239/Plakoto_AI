@@ -580,4 +580,4 @@ def main(show = False, user_exists = False):
     
     
 if __name__ == '__main__':
-    main(show=True, user_exists=True)
+    main(show=True, user_exists=False)
