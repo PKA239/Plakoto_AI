@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import randomAgent
 import pygame
+import psai
 from pygame.locals import *
 import time
 # import sys
@@ -527,7 +528,9 @@ def main(show = False, user_exists = False):
     else: 
         player1 = randomAgent
         
-    player2 = randomAgent #Player 2 is always randomAgent
+    #player2 = randomAgent #Player 2 is always randomAgent
+    player2 = psai
+    player2.loadModel('weights/DQN_2000000-20210705T003309Z-001/DQN_2000000')
  
     wins = 0
     nEpochs = 1_000
@@ -577,4 +580,4 @@ def main(show = False, user_exists = False):
     
     
 if __name__ == '__main__':
-    main(show=True)
+    main(show=True, user_exists=True)

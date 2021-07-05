@@ -29,7 +29,7 @@ print('Model initialized with parameters:','\n'*2, config, '\n'*2)
 
 # Policy Network | Deep Q-network
 DQN = keras.Sequential()
-DQN.add(layers.Dense(100, input_shape=(49,), activation='sigmoid'))
+DQN.add(layers.Dense(128, input_shape=(49,), activation='sigmoid'))
 DQN.add(layers.Dense(1, activation='sigmoid'))
 
 #DQN = keras.Sequential([
@@ -85,6 +85,9 @@ def game_over_update(board, reward):
     target = np.array([[reward]])
     S = np.array([board_2_state(board, 1)])
     replay_buffer.push(S, None, reward, S, target, done=True)
+
+def loadModel(file):
+    DQN.load_weights(file)
 
 def action(board_copy,dice,player,i, train=False,train_config=None):
 
