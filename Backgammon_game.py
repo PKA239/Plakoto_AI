@@ -332,6 +332,9 @@ def eventloop_help(event):
         
     elif event.type == pygame.QUIT:
         pygame.quit()
+        
+    elif (event.type == pygame.K_u):
+        pygame.display.update()
 
 def eventloop(user_exists):
     # Event loop

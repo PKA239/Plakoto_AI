@@ -22,7 +22,7 @@ import time
 import kotra
 import Backgammon_game as bg
 
-
+from gui_button import Button, mainloop
 # ----------- The Pygame globals -------------------------------------
 class Gui():    
        
@@ -145,34 +145,32 @@ class Gui():
     
         pygame.display.update()
     
-    
-    
+    def show_thm_logo(self):        
+        self.startImg = pygame.image.load('thm.png')
+        self.startImg = pygame.transform.scale(self.startImg, (1280, 720))
+        self.screen.fill([255, 255, 255])
+        self.screen.blit(self.startImg, (0,0))
+        text = self.font.render("Klick to start the game.", False, (255, 100, 100))
+        self.screen.blit(text, (100, 100))
+        pygame.display.flip()
+        
+        time.sleep(0.4)
+        #pygame.display.update()
     
     
     #------------- The start menu GUI -----------------------------------------
     def menu(self):
-        
-        pygame.init()
-        pygame.display.init()
-        pygame.font.init()
-        font = pygame.font.SysFont('Arial', 30)
-    
+               
         #pygame.display.update()
-        
-        
-        #Screen Settings
-        width = 1280
-        height = 720
-        screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption('Backgammon - Plakoto')
-        pygame.display.set_icon(pygame.image.load("dice6.png"))
-        
+             
         
         #Load the first picture
         start_img = pygame.image.load('board2.png')
-        pygame.display.flip()
-        time.sleep(5)
-        pygame.display.quit()
+        
+        pygame.display.update()
+        #pygame.display.flip()
+        #time.sleep(5)
+        #pygame.display.quit()
     
         return 0
         
@@ -191,9 +189,24 @@ def main(user_exists, show = False):
     
     #Initialize Pygame
     pygame.init()
-    pygame.display.init()
+    pygame.display.init()    
     pygame.font.init()   
+    clock = pygame.time.Clock()
     gui = Gui()
+    
+    gui.show_thm_logo()
+    
+    
+    #-------NOT WORKING YET
+    button = Button(gui,
+    "Click here",
+    (100, 100),
+    font=30,
+    bg="navy",
+    feedback="You clicked me")
+ 
+    mainloop(button, gui)
+    #----------------------
     
     
     if not show: gui.screen = pygame.quit()
