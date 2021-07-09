@@ -187,7 +187,7 @@ class Gui():
         
 
     
-def main(show = False, user_exists = True):  
+def main(user_exists, show = False):  
     
     #Initialize Pygame
     pygame.init()
@@ -234,6 +234,8 @@ def main(show = False, user_exists = True):
             
             performance = bg.log_status(g, wins, performance, nEpochs)
             wins = 0
+            
+       
         
         bg.play_a_game(player1, player2, gui = gui, show=show, user_exists = user_exists) # g, commentary=False)
         #bg.play_a_game(player1, player2, gui, False, None, False, show=show, user_exists = user_exists) # g, commentary=False)
@@ -263,4 +265,4 @@ def main(show = False, user_exists = True):
     
     
 if __name__ == '__main__':
-    main(show=True, user_exists=False)
+    main(user_exists=True, show=True)

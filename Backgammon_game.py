@@ -221,10 +221,10 @@ def valid_move(move,board_copy,dice,player,i):
     # print(type(move))
     return True
     
-def play_a_game( player1, player2, gui, train=False, train_config=None, commentary = False, show=False, user_exists = False):
+def play_a_game( player1, player2, gui, train=False, train_config=None, commentary = False, show =False, user_exists = False):
     board = init_board() # initialize the board
     player = np.random.randint(2)*2-1 # which player begins?
-    print("User exists? ", user_exists)
+
     # play on
     while not game_over(board) and not check_for_error(board):
         if commentary: print("lets go player ",player)
