@@ -8,6 +8,7 @@ Created on Fri Jul  9 19:40:26 2021
 Source: https://pythonprogramming.altervista.org/buttons-in-pygame/#:~:text=%20How%20to%20make%20a%20button%20in%20pygame%3A,butto%20%28when%20you%20click%20for%20example%29%20More%20
 """
 import pygame
+import time
 
 #pygame.init()
 #screen = pygame.display.set_mode((500, 600))
@@ -39,12 +40,15 @@ class Button:
     def show(self, button, gui):
         self.gui.screen.blit(button.surface, (self.x, self.y))
  
-    def click(self, event):
+    def click(self, clock, event):
         x, y = pygame.mouse.get_pos()        
         if pygame.mouse.get_pressed()[0]:
             if self.rect.collidepoint(x, y):
                 self.change_text(self.feedback, bg="red")
-                pygame.display.update()
+                #pygame.display.update()
+                
+                #return True
+                #pygame.display.update()
     """
     def click(self, event):
         x, y = pygame.mouse.get_pos()
@@ -55,25 +59,46 @@ class Button:
     """
  
  
-def mainloop(clock, button, gui):
+def mainloop2(clock, button, gui):
     """ The infinite loop where things happen """
-    while True:
+    loop = True
+    #while loop:
+    button.show(button, gui)
+    while loop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 print("Klicked")
-                button.click(event)
+                try:
+                    button.click(clock, event)    
+                    button.show(button, gui)
+                    clock.tick(10)
+                    break
+                    
+                except:
+                    pass
+        loop = False
+
+def mainloop(clock, button, gui):
+    """ The infinite loop where things happen """
+    loop = True
+    clickcount = 0
+    while loop:
+        for event in pygame.event.get():
+            print(clickcount)
+            
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                clickcount += 1
+                print("Klicked")
+                button.click(clock, event)
+                        
+            if clickcount >=2:
+                loop = False
+                break
         button.show(button, gui)
-        clock.tick(1)
+        clock.tick(30)
         pygame.display.update()
  
-"""
-button1 = Button(
-    "Click here",
-    (100, 100),
-    font=30,
-    bg="navy",
-    feedback="You clicked me")
- 
-mainloop()"""

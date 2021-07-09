@@ -364,8 +364,9 @@ def eventloop(user_exists):
                         return x, y                        
                     
                     elif mouse_presses[0] == False:
-                        time.sleep(1)                
-                        screen.blit(font.render("Please left-click on a field.", False, (255, 100, 100)), (0,0))
+                        print("Please left-click on a field.")
+                        #time.sleep(1)                
+                        #self.screen.blit(font.render("Please left-click on a field.", False, (255, 100, 100)), (0,0))
                 """
                 else:
                      time.sleep(1)                
