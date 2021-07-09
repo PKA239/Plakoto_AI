@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import randomAgent
+import userAgent
 import pygame
 import psai
 from pygame.locals import *
@@ -247,7 +248,7 @@ def play_a_game( player1, player2, gui, train=False, train_config=None, commenta
                     
                     if user_exists: 
                         #x, y =  eventloop(user_exists)
-                        move = user_action(x, y, board_copy,dice,player,i,train=train,train_config=train_config)
+                        move = player1.user_action(x, y, board_copy,dice,player,i,train=train,train_config=train_config)
                     else:
                         #eventloop(user_exists)
                         move = player1.action(board_copy,dice,player,i,train=train,train_config=train_config) 
@@ -260,7 +261,7 @@ def play_a_game( player1, player2, gui, train=False, train_config=None, commenta
                 if player == 1:
                     if user_exists: 
                         #x, y =  eventloop(user_exists)
-                        move = user_action(x, y, board_copy,dice,player,i)
+                        move = player1.user_action(x, y, board_copy,dice,player,i)
                     else:
                         #eventloop(user_exists)
                         move = player1.action(board_copy,dice,player,i) 
@@ -384,24 +385,4 @@ def eventloop(user_exists):
         return x, y
     
         
-              
-#-------------The user Agent -----------------------------------------    
-
-def user_action(x, y, board_copy,dice,player,i):
-    # user agent
-    # inputs are the board, the dice and which player is to move
-    # outputs the chosen move accordingly to mouse input
-
-    #eventloop(user_exists)
-    # check out the legal moves available for the throw
-    possible_moves, possible_boards = legal_moves(board_copy, dice, player)
-
-    # if there are no moves available
-    if len(possible_moves) == 0:
-        return []
-
-    
-    move = possible_moves[np.random.randint(len(possible_moves))]
-    
-
-    return move
+  

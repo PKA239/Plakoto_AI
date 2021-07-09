@@ -45,40 +45,8 @@ class Button:
         if pygame.mouse.get_pressed()[0]:
             if self.rect.collidepoint(x, y):
                 self.change_text(self.feedback, bg="red")
-                #pygame.display.update()
                 
-                #return True
-                #pygame.display.update()
-    """
-    def click(self, event):
-        x, y = pygame.mouse.get_pos()
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pressed()[0]:
-                if self.rect.collidepoint(x, y):
-                    self.change_text(self.feedback, bg="red")
-    """
- 
- 
-def mainloop2(clock, button, gui):
-    """ The infinite loop where things happen """
-    loop = True
-    #while loop:
-    button.show(button, gui)
-    while loop:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                print("Klicked")
-                try:
-                    button.click(clock, event)    
-                    button.show(button, gui)
-                    clock.tick(10)
-                    break
-                    
-                except:
-                    pass
-        loop = False
+  
 
 def mainloop(clock, button, gui):
     """ The infinite loop where things happen """
@@ -95,7 +63,7 @@ def mainloop(clock, button, gui):
                 print("Klicked")
                 button.click(clock, event)
                         
-            if clickcount >=2:
+            if clickcount >=1:
                 loop = False
                 break
         button.show(button, gui)

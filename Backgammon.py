@@ -12,6 +12,7 @@ so make sure your changes here won't affect his performance.
 import numpy as np
 import matplotlib.pyplot as plt
 import randomAgent
+import userAgent
 import pygame
 import psai
 from pygame.locals import *
@@ -219,7 +220,7 @@ def main(user_exists, show = False):
     performance = list()
 
     if user_exists:
-        player1 = bg.user_action
+        player1 = userAgent
     else: 
         player1 = randomAgent
     
