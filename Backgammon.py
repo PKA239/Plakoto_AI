@@ -150,8 +150,8 @@ class Gui():
         self.startImg = pygame.transform.scale(self.startImg, (1280, 720))
         self.screen.fill([255, 255, 255])
         self.screen.blit(self.startImg, (0,0))
-        text = self.font.render("Klick to start the game.", False, (255, 100, 100))
-        self.screen.blit(text, (100, 100))
+        #text = self.font.render("Klick to start the game.", False, (255, 100, 100))
+        #self.screen.blit(text, (100, 100))
         pygame.display.flip()
         
         time.sleep(0.4)
@@ -160,12 +160,13 @@ class Gui():
     
     #------------- The start menu GUI -----------------------------------------
     def menu(self):
+        TODO
                
         #pygame.display.update()
              
         
         #Load the first picture
-        start_img = pygame.image.load('board2.png')
+        start_img = pygame.image.load('???')
         
         pygame.display.update()
         #pygame.display.flip()
@@ -205,7 +206,7 @@ def main(user_exists, show = False):
     bg="navy",
     feedback="You clicked me")
  
-    mainloop(button, gui)
+    mainloop(clock, button, gui)
     #----------------------
     
     

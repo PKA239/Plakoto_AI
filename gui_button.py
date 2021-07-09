@@ -40,22 +40,32 @@ class Button:
         self.gui.screen.blit(button.surface, (self.x, self.y))
  
     def click(self, event):
+        x, y = pygame.mouse.get_pos()        
+        if pygame.mouse.get_pressed()[0]:
+            if self.rect.collidepoint(x, y):
+                self.change_text(self.feedback, bg="red")
+                pygame.display.update()
+    """
+    def click(self, event):
         x, y = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
                 if self.rect.collidepoint(x, y):
                     self.change_text(self.feedback, bg="red")
+    """
  
  
-def mainloop(button, gui):
+def mainloop(clock, button, gui):
     """ The infinite loop where things happen """
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            button.click(event)
-        button.show(gui)
-        clock.tick(30)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                print("Klicked")
+                button.click(event)
+        button.show(button, gui)
+        clock.tick(1)
         pygame.display.update()
  
 """
