@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import Backgammon
-from Backgammon import *
+import Backgammon_game
+from Backgammon_game import *
 import kotra
 import psai
 import randomAgent
 import time
+import pygame
 
 def plot_perf(performance):
     plt.plot(performance)
@@ -16,16 +17,16 @@ def plot_perf(performance):
 def evaluate(agent, evaluation_agent, n_eval, n_games):
     wins = 0
     for i in range(n_eval):
-        winner, board = Backgammon.play_a_game(agent, evaluation_agent)
+        winner, board = Backgammon_game.play_a_game(agent, evaluation_agent)
         wins += int(winner==1)
     winrate = round(wins/n_eval*100,3)
     print("Win-rate after training for "+str(n_games)+" games: "+str(winrate)+"%" )
     return winrate
 
-def train(n_games=1001, n_epochs=100, n_eval=20, show=False):
+def train(n_games=10000, n_epochs=500, n_eval=20, show=False, file=""):
+    pygame.quit()
     agent = psai
     evaluation_agent = randomAgent
-    pygame.quit()
     winrates = []
     print("start training")
     startTime = time.time()
@@ -37,9 +38,9 @@ def train(n_games=1001, n_epochs=100, n_eval=20, show=False):
             winrates.append(winrate)
             print(g, winrate)
 
-        winner, board = Backgammon.play_a_game(agent, agent, train=True, train_config={'g':g})
+        winner, board = Backgammon_game.play_a_game(agent, agent, train=True, train_config={'g':g}, gui=False)
         agent.game_over_update(board, int(winner==1))
-        agent.game_over_update(kotra.flip_board(board), int(winner==-1))
+        agent.game_over_update(psai.flip_board(board), int(winner==-1))
 
     runTime = time.time() - startTime
     print("runTime:", runTime)

@@ -9,11 +9,10 @@ Created on Fri Jul  9 18:08:26 2021
 import numpy as np
 import matplotlib.pyplot as plt
 
+import Backgammon
 import randomAgent
 import userAgent
-import pygame
 import psai
-from pygame.locals import *
 import time
 import os
 import time
@@ -26,8 +25,8 @@ import kotra
 def init_board():
     # initializes the game board
     board = np.zeros(51)#29
-    board[1] = -15 #weiß startet obven rechts
-    board[24] = 15 #schwarz startet unten rechts
+    board[1] = -15 #gelb startet obven links
+    board[24] = 15 #schwarz startet unten links
     return board
 
 def roll_dice():
@@ -193,8 +192,6 @@ def update_board(board, move, player):
         startPip = move[0]
         endPip = move[1]
 
-        #kein kill mehr, blocken einfügen
-
         # moving the dead piece if the move kills a piece
         block = board_to_update[endPip]==(-1*player)
         if block:
@@ -222,7 +219,7 @@ def valid_move(move,board_copy,dice,player,i):
     # print(type(move))
     return True
     
-def play_a_game( player1, player2, gui, train=False, train_config=None, commentary = False, show =False, user_exists = False):
+def play_a_game( player1, player2, gui=False, train=False, train_config=None, commentary = False, show =False, user = False):
     board = init_board() # initialize the board
     player = np.random.randint(2)*2-1 # which player begins?
 
@@ -236,54 +233,51 @@ def play_a_game( player1, player2, gui, train=False, train_config=None, commenta
             
         # make a move (2 moves if the same number appears on the dice)
         for i in range(1+int(dice[0] == dice[1])):
-            board_copy = np.copy(board) 
-            
-            x, y = eventloop(user_exists)  
-            
-              
-            
-            if train:
-                
-                if player == 1:
-                    
-                    if user_exists: 
-                        #x, y =  eventloop(user_exists)
-                        move = player1.user_action(x, y, board_copy,dice,player,i,train=train,train_config=train_config)
-                    else:
-                        #eventloop(user_exists)
-                        move = player1.action(board_copy,dice,player,i,train=train,train_config=train_config) 
-                
-                elif player == -1:
-                    #eventloop(user_exists)
-                    move = player2.action(board_copy,dice,player,i,train=train,train_config=train_config)
-            
-            else:
-                if player == 1:
-                    if user_exists: 
-                        #x, y =  eventloop(user_exists)
-                        move = player1.user_action(x, y, board_copy,dice,player,i)
-                    else:
-                        #eventloop(user_exists)
-                        move = player1.action(board_copy,dice,player,i) 
-                        
-                elif player == -1:
-                    #eventloop(user_exists)                    
-                    move = player2.action(board_copy,dice,player,i)
+            board_copy = np.copy(board)
 
-            # check if the move is valid
-            if not is_legal_move(move,board_copy,dice,player,i):
-                print("Game forfeited. Player "+str(player)+" made an illegal move")
-                return -1*player
-                
-            # update the board
-            if len(move) != 0:
-                for m in move:
-                    if show:
-                        gui.showBoard(board, dice)
-                        time.sleep(0.5)
-                    board = update_board(board, m, player)
-                    if show:
-                        gui.showBoard(board, dice)
+            #Fall User direkt behandeln, statt in die routine einbinden. Das verhalten ist zu unterschiedlich
+            if player == 1 and user:
+                # x, y =  eventloop(user_exists)
+                Backgammon.gui.showBoard(board, dice, rect=False)
+                move = player1.user_action(board_copy, dice, player, i)
+                board = update_board(board, move, player)
+                Backgammon.gui.showBoard(board, dice, rect=False)
+                board_copy = np.copy(board)
+                move = player1.user_action(board_copy, dice, player, i)
+                board = update_board(board, move, player)
+                Backgammon.gui.showBoard(board, dice, rect=False)
+
+
+            else:
+                if train:
+                    if player == 1:
+                        move = player1.action(board_copy,dice,player,i,train=train,train_config=train_config)
+
+                    elif player == -1:
+                        move = player2.action(board_copy,dice,player,i,train=train,train_config=train_config)
+
+                else:
+                    if player ==1:
+                        move = player1.action(board_copy,dice,player,i)
+
+                    elif player == -1:
+                        #eventloop(user_exists)
+                        move = player2.action(board_copy,dice,player,i)
+
+                # check if the move is valid
+                if not is_legal_move(move,board_copy,dice,player,i):
+                    print("Game forfeited. Player "+str(player)+" made an illegal move")
+                    return -1*player
+
+                # update the board
+                if len(move) != 0:
+                    for m in move:
+                        board = update_board(board, m, player)
+                        if show:
+                            Backgammon.gui.showBoard(board, dice)
+                            time.sleep(0.5)
+
+
 
 
                                 
@@ -293,21 +287,13 @@ def play_a_game( player1, player2, gui, train=False, train_config=None, commenta
                 pretty_print(board)
                 print("\n")
                 
-        # players take turns 
+        # switch player
         player = -player
-
-        # if game_over(board) and player == -1:
-        #     print("final move, dice and board:")
-        #     print(move)
-        #     print(dice)
-        #     pretty_print(board)
-        #     exit()
 
             
     # return the winner
     if show : pretty_print(board)
     return winner(board, show), board
-    #return -1*player, board
 
 def plot_perf(performance):
     plt.plot(performance)
@@ -324,65 +310,5 @@ def log_status(g, wins, performance, nEpochs):
     return performance
 
 
-
-# ------------ Event loop -----------------------------------------------
-def eventloop_help(event):
- # General check
-    if (event.type == MOUSEBUTTONUP):
-       None
-        
-    elif event.type == pygame.QUIT:
-        pygame.quit()
-        
-    elif (event.type == pygame.K_u):
-        pygame.display.update()
-
-def eventloop(user_exists):
-    # Event loop
-    x = np.nan
-    y = np.nan
-    continue_loop = True
-    
-    if user_exists:     
-        
-        while continue_loop:  
-            
-            for event in pygame.event.get():               
-                if (event.type == MOUSEBUTTONUP):
-                    None
-            
-                elif event.type == pygame.QUIT:
-                    pygame.quit()                         
-                                
-                elif (event.type == pygame.MOUSEBUTTONDOWN):                                      
-                    mouse_presses = pygame.mouse.get_pressed()                    
-                    # Only if left mouse key is pressed, the input is considered valid
-                    if mouse_presses[0]:
-                        print("Left Mouse key was clicked")      
-                        x , y = pygame.mouse.get_pos()
-                        print("Position of mousebuttons", x , y)
-                        continue_loop = False
-                        return x, y                        
-                    
-                    elif mouse_presses[0] == False:
-                        print("Please left-click on a field.")
-                        #time.sleep(1)                
-                        #self.screen.blit(font.render("Please left-click on a field.", False, (255, 100, 100)), (0,0))
-                """
-                else:
-                     time.sleep(1)                
-                     screen.blit(font.render("Please left-click on a field.", False, (255, 100, 100)), (0,0))"""
-                
-    else:
-      
-        for event in pygame.event.get(): 
-           
-            if (event.type == MOUSEBUTTONUP):
-                None
-            
-            elif event.type == pygame.QUIT:
-                pygame.quit()                     
-        return x, y
-    
         
   

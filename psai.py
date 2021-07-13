@@ -7,7 +7,7 @@ perceive the board as player 1
 """
 import numpy as np
 
-import Backgammon
+import Backgammon_game
 
 import tensorflow as tf
 from tensorflow import keras
@@ -29,7 +29,10 @@ print('Model initialized with parameters:','\n'*2, config, '\n'*2)
 
 # Policy Network | Deep Q-network
 DQN = keras.Sequential()
-DQN.add(layers.Dense(128, input_shape=(49,), activation='sigmoid'))
+DQN.add(layers.Dense(64, input_shape=(49,), kernel_initializer='random_uniform', activation='tanh'))
+DQN.add(layers.Dense(32, activation='tanh'))
+DQN.add(layers.Dense(16, activation='tanh'))
+DQN.add(layers.Dense(8, activation='tanh'))
 DQN.add(layers.Dense(1, activation='sigmoid'))
 
 #DQN = keras.Sequential([
@@ -38,6 +41,8 @@ DQN.add(layers.Dense(1, activation='sigmoid'))
 #])
 
 DQN.compile(optimizer = 'Adam',loss = 'mse')
+
+
 
 # Target network. Gets copied from policy-network at certain intervals
 DQN_target = tf.keras.models.clone_model(DQN) # https://www.tensorflow.org/api_docs/python/tf/keras/models/clone_model
@@ -100,7 +105,7 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         board_copy = flip_board(board_copy)
 
     # check out the legal moves available for the throw
-    possible_moves, possible_boards = Backgammon.legal_moves(board_copy, dice, player=1)
+    possible_moves, possible_boards = Backgammon_game.legal_moves(board_copy, dice, player=1)
 
     # if there are no moves available, return an empty move
     if len(possible_moves) == 0:
@@ -125,8 +130,6 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
 
 
     if train:
-        # # number of games
-        # g = train_config['g']
 
         # state chosen from eta-greedy
         S_prime = np.array([board_2_state(possible_boards[action], first_of_2)])
@@ -154,9 +157,14 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         # save model every 1000_000 training moves
         if counter % 100000 == 0 and not counter in saved_models and counter != 0:
             # save both networks
-            filepath = "./kotra_weights/DQN_" + str(counter)
+            filepath = "./psai_weights/DQN_" + str(counter)
             print("saving weights in file:" + filepath)
             DQN.save(filepath, overwrite=True, include_optimizer=True)
+
+            #for colab
+            #filepath = "/content/drive/My Drive/ai4games/psai_weights_Dense128Relu/DQN_" + str(counter)
+            #print("saving weights in file:" + filepath)
+            #DQN.save(filepath, overwrite=True, include_optimizer=True)
 
         counter += 1
 
