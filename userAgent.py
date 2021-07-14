@@ -16,17 +16,34 @@ import Backgammon
 
              
 #-------------The user Agent -----------------------------------------    
-
 startpos = -1
 endpos = -1
 valid=False
+
 def handleInput(pos, board, player, dice):
     Backgammon_game.pretty_print(board)
     global startpos
     global endpos
     global valid
     #startposition setzen
+    
+    #For debugging-------------------
+    print("startpos", startpos)
+    print("board", board)
+    print("pos", pos)
+    print("board[pos]", board[pos])
+    #-------------------------------
+    
+    #In case you click on an invalid field
+    if pos == None:
+        print("Error: position resetted. ")
+        startpos = -1
+        endpos = -1
+        return
+        
+        
     if player == 1:
+       
         if startpos == -1 and board[pos] >= 1:
             startpos = pos
             print("startpos gesetzt ", startpos)
@@ -63,9 +80,7 @@ def user_action(board_copy,dice,player,i):
     global startpos
     global endpos
     global valid
-    startpos = -1
-    endpos = -1
-    valid = False
+    
     # user agent
     # inputs are the board, the dice and which player is to move
     # outputs the chosen move accordingly to mouse input
@@ -78,12 +93,16 @@ def user_action(board_copy,dice,player,i):
     if len(possible_moves) == 0:
         return []
 
+    #--------- Eventloop of user_action ----------------------------------------
     while not valid:
         event = pygame.event.wait()
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
             position = Backgammon.gui.getPosition(x, y)
             handleInput(position, board_copy, player, dice)
+        #Added option to quit the game
+        #elif event.type == pygame.QUIT:
+                    #pygame.quit()
 
     #for possible_move in possible_moves:
     #    print(possible_move)
