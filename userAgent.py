@@ -100,6 +100,7 @@ def user_action(board_copy,dice,player,i):
             x, y = pygame.mouse.get_pos()
             position = Backgammon.gui.getPosition(x, y)
             handleInput(position, board_copy, player, dice)
+            pygame.event.get()
         #Added option to quit the game
         #elif event.type == pygame.QUIT:
                     #pygame.quit()
