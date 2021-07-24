@@ -12,6 +12,7 @@ from pygame.locals import *
 
 import Plakoto_game
 import Plakoto_game as bg
+#import GUI
 import Plakoto
 
              
@@ -20,6 +21,8 @@ startpos = -1
 endpos = -1
 valid=False
 
+def isUserAgent():
+    return True
 def handleInput(pos, board, player, dice):
     Plakoto_game.pretty_print(board)
     global startpos
@@ -38,9 +41,10 @@ def handleInput(pos, board, player, dice):
         print("deleting positions1")
         startpos = -1
         endpos = -1
+        return
         
     if player == 1:
-       
+        #if sum(board[7:25]>0):
         if startpos == -1 and board[pos] >= 1:
             startpos = pos
             print("startpos gesetzt ", startpos)
@@ -53,6 +57,8 @@ def handleInput(pos, board, player, dice):
                 print("deleting positions1")
                 startpos = -1
                 endpos = -1
+        elif pos < 1 and startpos - dice[0] < 1 or pos < 1 and startpos - dice[1] < 1:
+            endpos = 49
         else:
             print("deleting positions2")
             startpos = -1
@@ -68,6 +74,8 @@ def handleInput(pos, board, player, dice):
                 print("deleting positions3")
                 startpos = -1
                 endpos = -1
+        elif not sum(board[1:19] > 0) and pos > 24 and startpos + dice[0] > 24 or pos > 24 and startpos + dice[1] > 24:
+            endpos = 50
         else:
             print("deleting positions4")
             startpos = -1

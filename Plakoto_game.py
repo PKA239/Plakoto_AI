@@ -8,7 +8,8 @@ Created on Fri Jul  9 18:08:26 2021
 
 import numpy as np
 import matplotlib.pyplot as plt
-
+#import GUI
+#from GUI import showBoard
 import Plakoto
 import randomAgent
 import userAgent
@@ -27,6 +28,10 @@ def init_board():
     board = np.zeros(51)#29
     board[1] = -15 #gelb startet obven links
     board[24] = 15 #schwarz startet unten links
+    ##board[1] = -15 #gelb startet obven links
+    #board[2] = 15 #schwarz startet unten links
+    #schwarz 1
+    # gelb -1
     return board
 
 def roll_dice():
@@ -218,8 +223,16 @@ def valid_move(move,board_copy,dice,player,i):
     # print(move)
     # print(type(move))
     return True
-    
-def play_a_game( player1, player2, gui=False, train=False, train_config=None, commentary = False, show =False, user = False):
+
+
+def roll_dice():
+    # rolls 2 dice
+    dice = np.random.randint(1,7,2)
+
+    return dice
+
+isUserTurn = False
+def play_a_game( player1, player2, train=False, train_config=None, commentary = False, show =False, user = False):
     board = init_board() # initialize the board
     player = np.random.randint(2)*2-1 # which player begins?
 
@@ -236,14 +249,25 @@ def play_a_game( player1, player2, gui=False, train=False, train_config=None, co
             board_copy = np.copy(board)
 
             #Fall User direkt behandeln, statt in die routine einbinden. Das verhalten ist zu unterschiedlich
-            if player == 1 and user:
+            print("player1: ",player1.isUserAgent())
+            print("player2: ",player2.isUserAgent())
+            print('player: ', player)
+
+            if  (player1.isUserAgent() and player == 1) or (player2.isUserAgent() and player == -1):
+
+
+                if player1.isUserAgent() and player == 1:
+                    action_player = player1
+                if player2.isUserAgent() and player == -1:
+                    action_player = player2
+
                 # x, y =  eventloop(user_exists)
                 Plakoto.gui.showBoard(board, dice, rect=False)
-                move = player1.user_action(board_copy, dice, player, i)
+                move = action_player.user_action(board_copy, dice, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
                 board_copy = np.copy(board)
-                move = player1.user_action(board_copy, dice, player, i)
+                move = action_player.user_action(board_copy, dice, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
 
@@ -288,6 +312,7 @@ def play_a_game( player1, player2, gui=False, train=False, train_config=None, co
                 print("\n")
                 
         # switch player
+
         player = -player
 
             
@@ -308,7 +333,6 @@ def log_status(g, wins, performance, nEpochs):
     print("win rate:", win_rate)
     performance.append(win_rate)
     return performance
-
 
         
   

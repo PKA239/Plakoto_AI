@@ -16,6 +16,9 @@ from tensorflow.keras import layers
 #Buffer for Samples/minibatches
 from basic_buffer import BasicBuffer
 
+def isUserAgent():
+    return False
+
 class config:
     nS = 48+1 # state space demension: boardspace + isAnotherMoveComing
     eps = 0.05
