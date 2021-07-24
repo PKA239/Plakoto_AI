@@ -18,14 +18,14 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import *
-from Backgammon import *
+from Plakoto import *
 
 # TODO: make your own or cite the thing
 # https://towardsdatascience.com/dqn-part-1-vanilla-deep-q-networks-6eb4a00febfb
 # https://github.com/cyoon1729/deep-Q-networks/blob/master/common/replay_buffers.py
 from basic_buffer import BasicBuffer 
 
-import Backgammon
+import Plakoto
 
 
 # Model config and hyperparameters 
@@ -140,7 +140,7 @@ def action(board_copy,dice,player,i,train=False,train_config=None):
         board_copy = flip_board(board_copy)
 
     # check out the legal moves available for the throw
-    possible_moves, possible_boards = Backgammon.legal_moves(board_copy, dice, player=1)
+    possible_moves, possible_boards = Plakoto.legal_moves(board_copy, dice, player=1)
 
     # if there are no moves available, return an empty move
     if len(possible_moves) == 0:

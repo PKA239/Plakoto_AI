@@ -9,7 +9,7 @@ Created on Fri Jul  9 18:08:26 2021
 import numpy as np
 import matplotlib.pyplot as plt
 
-import Backgammon
+import Plakoto
 import randomAgent
 import userAgent
 import psai
@@ -238,14 +238,14 @@ def play_a_game( player1, player2, gui=False, train=False, train_config=None, co
             #Fall User direkt behandeln, statt in die routine einbinden. Das verhalten ist zu unterschiedlich
             if player == 1 and user:
                 # x, y =  eventloop(user_exists)
-                Backgammon.gui.showBoard(board, dice, rect=False)
+                Plakoto.gui.showBoard(board, dice, rect=False)
                 move = player1.user_action(board_copy, dice, player, i)
                 board = update_board(board, move, player)
-                Backgammon.gui.showBoard(board, dice, rect=False)
+                Plakoto.gui.showBoard(board, dice, rect=False)
                 board_copy = np.copy(board)
                 move = player1.user_action(board_copy, dice, player, i)
                 board = update_board(board, move, player)
-                Backgammon.gui.showBoard(board, dice, rect=False)
+                Plakoto.gui.showBoard(board, dice, rect=False)
 
 
             else:
@@ -274,7 +274,7 @@ def play_a_game( player1, player2, gui=False, train=False, train_config=None, co
                     for m in move:
                         board = update_board(board, m, player)
                         if show:
-                            Backgammon.gui.showBoard(board, dice)
+                            Plakoto.gui.showBoard(board, dice)
                             time.sleep(0.5)
 
 

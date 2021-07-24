@@ -22,7 +22,7 @@ from pygame.locals import *
 import psai
 import os
 import time
-import Backgammon_game as bg
+import Plakoto_game as bg
 
 from gui_button import Button, mainloop
 # ----------- The Pygame globals -------------------------------------

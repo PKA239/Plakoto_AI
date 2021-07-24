@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import Backgammon_game
-from Backgammon_game import *
+import Plakoto_game
+from Plakoto_game import *
 import kotra
 import psai
 import randomAgent
@@ -17,7 +17,7 @@ def plot_perf(performance):
 def evaluate(agent, evaluation_agent, n_eval, n_games):
     wins = 0
     for i in range(n_eval):
-        winner, board = Backgammon_game.play_a_game(agent, evaluation_agent)
+        winner, board = Plakoto_game.play_a_game(agent, evaluation_agent)
         wins += int(winner==1)
     winrate = round(wins/n_eval*100,3)
     print("Win-rate after training for "+str(n_games)+" games: "+str(winrate)+"%" )
@@ -38,7 +38,7 @@ def train(n_games=10000, n_epochs=500, n_eval=20, show=False, file=""):
             winrates.append(winrate)
             print(g, winrate)
 
-        winner, board = Backgammon_game.play_a_game(agent, agent, train=True, train_config={'g':g}, gui=False)
+        winner, board = Plakoto_game.play_a_game(agent, agent, train=True, train_config={'g':g}, gui=False)
         agent.game_over_update(board, int(winner==1))
         agent.game_over_update(psai.flip_board(board), int(winner==-1))
 

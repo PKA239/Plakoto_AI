@@ -66,7 +66,7 @@ def mainloop(clock, button, gui):
             if clickcount >=1:
                 loop = False
                 break
-        button.show(button, gui)
+        #button.show(button, gui)
         clock.tick(30)
         pygame.display.update()
  
