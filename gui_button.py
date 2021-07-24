@@ -48,7 +48,7 @@ class Button:
                 
   
 
-def mainloop(clock, button, gui):
+def mainloop(clock, gui):
     """ The infinite loop where things happen """
     loop = True
     clickcount = 0
@@ -58,15 +58,11 @@ def mainloop(clock, button, gui):
             
             if event.type == pygame.QUIT:
                 pygame.quit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                clickcount += 1
-                print("Klicked")
-                button.click(clock, event)
                         
             if clickcount >=1:
                 loop = False
                 break
-        button.show(button, gui)
+
         clock.tick(30)
         pygame.display.update()
  

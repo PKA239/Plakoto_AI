@@ -6,11 +6,12 @@ see flipped_agent for an example of how to flip the board in order to always
 perceive the board as player 1
 """
 import numpy as np
-import Backgammon_game as bg
+import Plakoto_game as bg
 
-
+def isUserAgent():
+    return False
 def action(board_copy,dice,player,i):
-    # the champion to be
+    # plain and simple random "AI"
     # inputs are the board, the dice and which player is to move
     # outputs the chosen move accordingly to its policy
 

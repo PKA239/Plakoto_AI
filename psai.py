@@ -7,7 +7,7 @@ perceive the board as player 1
 """
 import numpy as np
 
-import Backgammon_game
+import Plakoto_game
 
 import tensorflow as tf
 from tensorflow import keras
@@ -15,6 +15,9 @@ from tensorflow.keras import layers
 
 #Buffer for Samples/minibatches
 from basic_buffer import BasicBuffer
+
+def isUserAgent():
+    return False
 
 class config:
     nS = 48+1 # state space demension: boardspace + isAnotherMoveComing
@@ -105,7 +108,7 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         board_copy = flip_board(board_copy)
 
     # check out the legal moves available for the throw
-    possible_moves, possible_boards = Backgammon_game.legal_moves(board_copy, dice, player=1)
+    possible_moves, possible_boards = Plakoto_game.legal_moves(board_copy, dice, player=1)
 
     # if there are no moves available, return an empty move
     if len(possible_moves) == 0:

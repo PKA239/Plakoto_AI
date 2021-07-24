@@ -10,9 +10,10 @@ import numpy as np
 import pygame
 from pygame.locals import *
 
-import Backgammon_game
-import Backgammon_game as bg
-import Backgammon
+import Plakoto_game
+import Plakoto_game as bg
+#import GUI
+import Plakoto
 
              
 #-------------The user Agent -----------------------------------------    
@@ -20,8 +21,10 @@ startpos = -1
 endpos = -1
 valid=False
 
+def isUserAgent():
+    return True
 def handleInput(pos, board, player, dice):
-    Backgammon_game.pretty_print(board)
+    Plakoto_game.pretty_print(board)
     global startpos
     global endpos
     global valid
@@ -33,17 +36,15 @@ def handleInput(pos, board, player, dice):
     print("pos", pos)
     print("board[pos]", board[pos])
     #-------------------------------
-    
-    #In case you click on an invalid field
+
     if pos == None:
-        print("Error: position resetted. ")
+        print("deleting positions1")
         startpos = -1
         endpos = -1
         return
         
-        
     if player == 1:
-       
+        #if sum(board[7:25]>0):
         if startpos == -1 and board[pos] >= 1:
             startpos = pos
             print("startpos gesetzt ", startpos)
@@ -53,11 +54,13 @@ def handleInput(pos, board, player, dice):
                 valid = True
                 print("endpos gesetzt ", endpos)
             else:
-                print("deleting positions")
+                print("deleting positions1")
                 startpos = -1
                 endpos = -1
+        elif pos < 1 and startpos - dice[0] < 1 or pos < 1 and startpos - dice[1] < 1:
+            endpos = 49
         else:
-            print("deleting positions")
+            print("deleting positions2")
             startpos = -1
             endpos = -1
 
@@ -68,11 +71,13 @@ def handleInput(pos, board, player, dice):
                 endpos = pos
                 valid = True
             else:
-                print("deleting positions")
+                print("deleting positions3")
                 startpos = -1
                 endpos = -1
+        elif not sum(board[1:19] > 0) and pos > 24 and startpos + dice[0] > 24 or pos > 24 and startpos + dice[1] > 24:
+            endpos = 50
         else:
-            print("deleting positions")
+            print("deleting positions4")
             startpos = -1
             endpos = -1
 
@@ -80,7 +85,9 @@ def user_action(board_copy,dice,player,i):
     global startpos
     global endpos
     global valid
-    
+    startpos = -1
+    endpos = -1
+    valid = False
     # user agent
     # inputs are the board, the dice and which player is to move
     # outputs the chosen move accordingly to mouse input
@@ -96,41 +103,11 @@ def user_action(board_copy,dice,player,i):
     #--------- Eventloop of user_action ----------------------------------------
     while not valid:
         event = pygame.event.wait()
+        if event.type == pygame.QUIT:
+            pygame.quit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
-            position = Backgammon.gui.getPosition(x, y)
+            position = Plakoto.gui.getPosition(x, y)
             handleInput(position, board_copy, player, dice)
-            pygame.event.get()
-        #Added option to quit the game
-        #elif event.type == pygame.QUIT:
-                    #pygame.quit()
-
-    #for possible_move in possible_moves:
-    #    print(possible_move)
-
-    #if np.array([np.array((possible_move[0] == [startpos1, endpos1])).all() for possible_move in possible_moves]).any():
-    #    if not np.array([np.array((len(possible_move) == 2 and possible_move[0] == [startpos1, endpos1])).all() for possible_move in possible_moves]).any():
-    #        return [[startpos1, endpos1]]
-    #    else:
-    #        print("ist drin")
-    #        event_happened = False
-    #        while not event_happened:
-    #            event = pygame.event.wait()
-    #            if event.type == pygame.MOUSEBUTTONDOWN:
-    #                x, y = pygame.mouse.get_pos()
-    #                position = Backgammon.gui.getPosition(x, y)
-    #                startpos2 = position
-    #                print(startpos2)
-    #                event_happened = True
-#
-    #        event_happened = False
-    #        while not event_happened:
-    #            event = pygame.event.wait()
-    #            if event.type == pygame.MOUSEBUTTONDOWN:
-    #                x, y = pygame.mouse.get_pos()
-    #                position = Backgammon.gui.getPosition(x, y)
-    #                endpos2 = position
-    #                print(endpos2)
-    #                event_happened = True
 
     return [startpos, endpos]
