@@ -292,11 +292,7 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
                             Plakoto.gui.showBoard(board, dice)
                             time.sleep(0.5)
 
-
-
-
-                                
-            # give status after every move:         
+            # give status after every move:
             if commentary: 
                 print("move from player",player,":")
                 pretty_print(board)
@@ -308,7 +304,7 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
 
             
     # return the winner
-    if show : pretty_print(board)
+    pretty_print(board)
     return winner(board, show), board
 
 def plot_perf(performance):

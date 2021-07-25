@@ -101,12 +101,12 @@ def handleInput(pos, board, player, dice):
                 startpos = -1
                 endpos = -1
 
-        elif dice[0] != -1 and pos < 1 and startpos - dice[0] < 1:
+        elif dice[0] != -1 and pos < 1 and startpos - dice[0] < 1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0:
             #chosen dice ergänzen
             endpos = 49
             valid = True
             dice[0] = -1
-        elif dice[1] != -1 and pos < 1 and startpos - dice[1] < 1:
+        elif dice[1] != -1 and pos < 1 and startpos - dice[1] < 1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0:
             endpos = 49
             valid = True
             dice[1] = -1
@@ -142,13 +142,13 @@ def handleInput(pos, board, player, dice):
                 print("deleting positions3")
                 startpos = -1
                 endpos = -1
-        elif dice[0] != -1 and pos > 24 and startpos + dice[0] > 24:
+        elif dice[0] != -1 and pos > 24 and startpos + dice[0] > 24 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0:
             endpos = 50
             valid = True
             dice[0] = -1
             # chosen dice
             #chosendice[move_no] = endpos
-        elif dice[1] != -1 and pos > 24 and startpos + dice[1] > 24:
+        elif dice[1] != -1 and pos > 24 and startpos + dice[1] > 24 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0:
             endpos = 50
             valid = True
             dice[1] = -1
