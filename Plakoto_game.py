@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 import Plakoto
 import randomAgent
 import userAgent
-import psai
+#import psai #CHANGE
 import time
 import os
 import time
 #import pubeval
-import kotra
+#import kotra
 
 
 
@@ -209,7 +209,7 @@ def update_board(board, move, player):
         board_to_update[startPip] = board_to_update[startPip]-1*player
         board_to_update[endPip] = board_to_update[endPip]+player
 
-        #Falls Pip frei wird, prüfe ein geblockter gegnerischer stein frei wird
+        #Falls Pip frei wird, prüfe ob ein geblockter gegnerischer stein frei wird
         unblock = (board_to_update[startPip]) == 0 and (board_to_update[startPip+24] != 0)
         if unblock:
             board_to_update[startPip] = board_to_update[startPip + 24]
@@ -262,12 +262,19 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
                     action_player = player2
 
                 # x, y =  eventloop(user_exists)
+               
+                #Move one
+                #print("move 1")
+                move_no = 0
                 Plakoto.gui.showBoard(board, dice, rect=False)
-                move = action_player.user_action(board_copy, dice, player, i)
+                move = action_player.user_action(move_no, board_copy, dice, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
                 board_copy = np.copy(board)
-                move = action_player.user_action(board_copy, dice, player, i)
+                #Move 2
+                #print("move 2")
+                move_no = 1
+                move = action_player.user_action(move_no, board_copy, dice, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
 

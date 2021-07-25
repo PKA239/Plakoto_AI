@@ -29,7 +29,7 @@ import Plakoto_game as bg
 import classGUI
 import randomAgent
 import userAgent
-import psai
+#import psai
 
 
 
@@ -41,19 +41,21 @@ def start_game():
     agent_play_1 = randomAgent
     agent_play_2 = randomAgent
     if player1 == 'userAgent': agent_play_1 = userAgent
-    if player1 == 'psai': agent_play_1 = psai
+    #if player1 == 'psai': agent_play_1 = psai
+    if player1 == 'psai': agent_play_1 = randomAgent #CHANGE
     if player1 == 'randomAgent': agent_play_1 = randomAgent
     if player2 == 'userAgent': agent_play_2 = userAgent
     if player2 == 'psai': agent_play_2 = psai
     if player2 == 'randomAgent': agent_play_2 = randomAgent
 
     if player1 == 'userAgent' or player2 == 'userAgent':
-        print("starting game with user agent")
+        print("starting game using user agent")
         winner, board = bg.play_a_game(agent_play_1, agent_play_2, user=True, show = True)
         print("Winner: ", winner)
     else:
+        print("starting game without any user agent")
         winner, board = bg.play_a_game(agent_play_1, agent_play_2, user=False, show = True)
-        print("starting game without user agent")
+        
         print("Winner: ", winner)
     menu.mainloop(gui.screenMenu)
 
