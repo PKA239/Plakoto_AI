@@ -26,10 +26,10 @@ import time
 def init_board():
     # initializes the game board
     board = np.zeros(51)#29
-    #board[1] = -15 #gelb startet obven links
-    #board[24] = 15 #schwarz startet unten links
     board[1] = -15 #gelb startet obven links
-    board[2] = 15 #schwarz startet unten links
+    board[24] = 15 #schwarz startet unten links
+    #board[1] = -15 #gelb startet obven links
+    #board[2] = 15 #schwarz startet unten links
     #board[23] = -15  # gelb startet obven links
     #board[24] = 15 #schwarz startet unten links
     #schwarz 1
@@ -251,14 +251,15 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
 
                 action_player.setDice(dice)
                 Plakoto.gui.showBoard(board, dice, rect=False)
-                print("dice before action: ", dice)
-                move, dice = action_player.user_action(board_copy, player, i)
+                move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
+                pretty_print(board)
                 Plakoto.gui.showBoard(board, dice, rect=False)
                 board_copy = np.copy(board)
 
-                move, dice = action_player.user_action(board_copy, player, i)
+                move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
+                pretty_print(board)
                 Plakoto.gui.showBoard(board, dice, rect=False)
 
 
