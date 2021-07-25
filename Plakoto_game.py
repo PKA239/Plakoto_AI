@@ -304,7 +304,6 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
 
             
     # return the winner
-    pretty_print(board)
     return winner(board, show), board
 
 def plot_perf(performance):

@@ -38,7 +38,7 @@ def train(n_games=10000, n_epochs=500, n_eval=20, show=False, file=""):
             winrates.append(winrate)
             print(g, winrate)
 
-        winner, board = Plakoto_game.play_a_game(agent, agent, train=True, train_config={'g':g}, gui=False)
+        winner, board = Plakoto_game.play_a_game(agent, agent, train=True, train_config={'g':g})
         agent.game_over_update(board, int(winner==1))
         agent.game_over_update(psai.flip_board(board), int(winner==-1))
 

@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# https://www.youtube.com/watch?v=KLl1tXoaNgk
+
 """
 Backgammon interface
 Run this program to play a game of Backgammon
@@ -9,9 +7,6 @@ Most (if not all) of your agent-develeping code should be written in the agent.p
 Feel free to change this file as you wish but you will only submit your agent 
 so make sure your changes here won't affect his performance.
 """
-
-# TODO userAgent, benutzen würfel im nächsten move nicht nutzen können
-# mögliche züge für geklickten spike mit 'mark' markieren
 
 
 import pygame
@@ -29,7 +24,7 @@ import Plakoto_game as bg
 import classGUI
 import randomAgent
 import userAgent
-#import psai
+import psai
 
 
 
@@ -75,22 +70,31 @@ def set_sim_results(score1 = 0, score2 = 0, draw = 0):
     score1, score2, draw = simulate()
     menu.add.label("\n ", font_size=24)
     menu.add.label("Simulation results ", font_size=24)
-    menu.add.label("Score Player 1:" + str(score1),  font_size=20)
-    menu.add.label("Score Player 2:" + str(score2),  font_size=20)
-    menu.add.label("Draw :" + str(draw), font_size=20)
+    menu.add.label("Score Player1: " + str(score1),  font_size=20)
+    menu.add.label("Score Player2: " + str(score2),  font_size=20)
+    menu.add.label("Draw: " + str(draw), font_size=20)
     pygame.display.update()
 
 simNumber = 100
 def simulate():
     agent_play_1 = randomAgent
     agent_play_2 = randomAgent
-    if player1 == 'userAgent': return
-    # if player1 == 'psai': agent_play_1 = psai
-    if player1 == 'psai': agent_play_1 = randomAgent  # CHANGE
-    if player1 == 'randomAgent': agent_play_1 = randomAgent
-    if player2 == 'userAgent': return
-    if player2 == 'psai': agent_play_2 = psai
-    if player2 == 'randomAgent': agent_play_2 = randomAgent
+
+    if player1 == 'userAgent':
+        return
+    if player1 == 'psai':
+        agent_play_1 = psai
+        agent_play_1.loadModel('64_32_1_tanh_sig')
+    if player1 == 'randomAgent':
+        agent_play_1 = randomAgent
+
+    if player2 == 'userAgent':
+        return
+    if player2 == 'psai':
+        agent_play_2 = psai
+        agent_play_2.loadModel('64_32_1_tanh_sig')
+    if player2 == 'randomAgent':
+        agent_play_2 = randomAgent
 
     startTime = time.time()
     winners = {}
@@ -195,56 +199,6 @@ def main(user=False, show=False):
     menu.add.label("\n ", font_size=10)
     menu.add.button('Quit', pygame_menu.events.EXIT)
     menu.mainloop(gui.screenMenu)
-
-    startTime = time.time()
-    winners = {}
-    winners["1"] = 0
-    winners["-1"] = 0
-    winners["0"] = 0  # Collecting stats of the games
-    nGames = 100  # how many games?
-    performance = list()
-
-    if user:
-        player1 = userAgent
-    else:
-        player1 = randomAgent
-
-    #
-    wd = os.getcwd()
-    print("wd", wd)
-
-    player2 = randomAgent
-    # player2 = psai
-    # player2.loadModel('/weights/DQN_2000000_20210705T003309Z_001/DQN_2000000')
-
-    # ----------------------------------------------------------------------------------------------
-
-    # Play game
-    print("Playing " + str(nGames) + " between" + str(player1) + "1 and " + str(player2) + "-1")
-
-    wins = 0
-    nEpochs = 1_000
-    for g in range(nGames):
-
-        print("playing game number: " + str(g))
-        if g % nEpochs == 0:
-            performance = bg.log_status(g, wins, performance, nEpochs)
-            wins = 0
-
-        bg.play_a_game(player1, player2, show=show, user=user)  # g, commentary=False)
-        # bg.play_a_game(player1, player2, gui, False, None, False, show=show, user_exists = user_exists) # g, commentary=False)
-
-        winners[str(bg.winner)] += 1
-        wins += (bg.winner == 1)
-
-    print("Out of", nGames, "games,")
-    print("player", 1, "won", winners["1"], "times and")
-    print("player", -1, "won", winners["-1"], "times and")
-    print(winners["0"], " games were a draw")
-    runTime = time.time() - startTime
-    print("runTime:", runTime)
-    print("average time:", runTime / nGames)
-    bg.plot_perf(performance)
 
 if __name__ == '__main__':
     main(user=True, show=True)

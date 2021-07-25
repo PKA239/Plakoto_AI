@@ -61,15 +61,17 @@ print("Network architecture: \n", DQN)
 
 # ------------------------------- Helper functions ---------------------------------
 def loadModel(name):
+    global DQN
     if name == '64_32_1_tanh_sig':
         DQN = keras.Sequential()
-        DQN.add(layers.Dense(64, input_shape=(49,), kernel_initializer='random_uniform', activation='tanh'))
+        DQN.add(layers.Dense(64, kernel_initializer='random_uniform', activation='tanh'))
+        DQN.add(layers.Dense(64, kernel_initializer='random_uniform', activation='tanh'))
         DQN.add(layers.Dense(32, activation='tanh'))
         DQN.add(layers.Dense(1, activation='sigmoid'))
         DQN.compile(optimizer='Adam', loss='mse')
         DQN_target = tf.keras.models.clone_model(DQN)
         DQN_target.compile(optimizer='Adam', loss='mse')
-        DQN.load_weights('/weights/64_32_1_tanh_sig/DQN_600000')
+        DQN.load_weights('./weights/64_32_1_tanh_sig/DQN_600000')
 
 
 def flip_board(board_copy):
