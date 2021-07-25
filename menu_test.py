@@ -35,36 +35,18 @@ def get_sim_no(value: str) -> None:
         no = 100
     return no
 
-def eventloop():
-    # Event loop
-    x = np.nan
-    y = np.nan
-    continue_loop = True
-    click_event_counter = 0
-    while continue_loop:
-        for event in pygame.event.get():
+def set_sim_results(menu):
+    score1 = 0
+    score2 = 0
+    draw = 0
 
+    menu.add.label("Simulation results" + str(score1), align=pygame_menu.locals.ALIGN_LEFT, font_size=20)
+    menu.add.label("Score Player 1:" + str(score1), align=pygame_menu.locals.ALIGN_LEFT, font_size=20)
+    menu.add.label("Score Player 2:" + str(score2), align=pygame_menu.locals.ALIGN_LEFT, font_size=20)
+    menu.add.label("Drawn:" + str(draw), align=pygame_menu.locals.ALIGN_LEFT, font_size=20)
 
-            #if event.type == pygame.QUIT:
-            #    continue_loop = False
-
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_presses = pygame.mouse.get_pressed()
-                # Only if left mouse key is pressed, the input is considered valid
-                if mouse_presses[0]:
-                    click_event_counter += 1
-                    print(click_event_counter)
-                    print("Left Mouse key was clicked")
-                    x, y = pygame.mouse.get_pos()
-                    print("Position of mousebuttons", x, y)
-                    #continue_loop = False
-                    #pygame.quit()
-                    return x, y
-                elif mouse_presses[0] == False:
-                    print("Please left-click on a field.")
-   #pygame.quit()
-
+def simulate(menu):
+    set_sim_results(menu)
 
 def menu():
     """
@@ -79,7 +61,9 @@ def menu():
         title_font_color=(215, 215, 215),
         widget_font_color=(200, 200, 200),
     )"""
-
+    score1 = 0
+    score2 = 0
+    draw = 0
 
     surface = window_init()
     menu = pygame_menu.Menu('test', 400, 600,
@@ -94,8 +78,8 @@ def menu():
 
     menu.add.button('Play', start_the_game)
     menu.add.button('Quit', pygame_menu.events.EXIT)
-
-    menu.add.text_input('No. Simulations: ', default='100', maxchar=10, onreturn = get_sim_no)
+    menu.add.text_input('No. Simulations: ', default='100', maxchar=10, onreturn=get_sim_no)
+    menu.add.button('Simulate', simulate(menu))
 
 
     menu.mainloop(surface)
