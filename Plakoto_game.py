@@ -252,12 +252,12 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
                 action_player.setDice(dice)
                 Plakoto.gui.showBoard(board, dice, rect=False)
                 print("dice before action: ", dice)
-                move = action_player.user_action(board_copy, player, i)
+                move, dice = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
                 board_copy = np.copy(board)
 
-                move = action_player.user_action(board_copy, player, i)
+                move, dice = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
 

@@ -189,4 +189,4 @@ def user_action(board_copy,player,i):
             #        handleInput(move_no, position, board_copy, player, [np.nan, dice])
 
     print([startpos, endpos])
-    return [startpos, endpos]
+    return [startpos, endpos], dice
