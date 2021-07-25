@@ -135,9 +135,15 @@ def user_action(move_no, board_copy,dice,player,i):
                 #print("dice", dice)
                 #print("dice chosen during last action", chosendice[0])
                 #print("where", np.where(dice == chosendice[0]))
-                dice = np.delete(dice,np.where(dice == chosendice[0]))
-                #print("Shortened dice: ", dice)
-                handleInput(move_no, position, board_copy, player, [np.nan, dice[0]])
+                dice_idx = np.where(dice == chosendice[0])[0]
+                print("dice", dice)
+                print("dice idx", dice_idx) 
+                if len(dice_idx) > 1: # doubles                    
+                    handleInput(move_no, position, board_copy, player, dice)
+                else:                    
+                    dice = np.delete(dice,dice_idx)
+                    print("Shortened dice: ", dice)
+                    handleInput(move_no, position, board_copy, player, [np.nan, dice])
 
 
 

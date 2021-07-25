@@ -26,11 +26,10 @@ import time
 def init_board():
     # initializes the game board
     board = np.zeros(51)#29
-    board[1] = -15 #gelb startet obven links
+    board[1] = -15 #gelb startet oben links
     board[24] = 15 #schwarz startet unten links
-    ##board[1] = -15 #gelb startet obven links
-    #board[2] = 15 #schwarz startet unten links
-    #schwarz 1
+    
+    # schwarz 1
     # gelb -1
     return board
 
