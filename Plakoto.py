@@ -29,7 +29,7 @@ import Plakoto_game as bg
 import classGUI
 import randomAgent
 import userAgent
-#import psai
+import psai
 
 
 
@@ -40,13 +40,22 @@ def start_game():
     print("starting game")
     agent_play_1 = randomAgent
     agent_play_2 = randomAgent
-    if player1 == 'userAgent': agent_play_1 = userAgent
-    #if player1 == 'psai': agent_play_1 = psai
-    if player1 == 'psai': agent_play_1 = randomAgent #CHANGE
-    if player1 == 'randomAgent': agent_play_1 = randomAgent
-    if player2 == 'userAgent': agent_play_2 = userAgent
-    if player2 == 'psai': agent_play_2 = psai
-    if player2 == 'randomAgent': agent_play_2 = randomAgent
+
+    if player1 == 'userAgent':
+        agent_play_1 = userAgent
+    if player1 == 'psai':
+        agent_play_1 = psai
+        agent_play_1.loadModel('64_32_1_tanh_sig')
+    if player1 == 'randomAgent':
+        agent_play_1 = randomAgent
+
+    if player2 == 'userAgent':
+        agent_play_1 = userAgent
+    if player2 == 'psai':
+        agent_play_2 = psai
+        agent_play_2.loadModel('64_32_1_tanh_sig')
+    if player2 == 'randomAgent':
+        agent_play_1 = randomAgent
 
     if player1 == 'userAgent' or player2 == 'userAgent':
         print("starting game using user agent")
@@ -59,12 +68,60 @@ def start_game():
         print("Winner: ", winner)
     menu.mainloop(gui.screenMenu)
 
+simNumber = 100
+def simulate():
+    agent_play_1 = randomAgent
+    agent_play_2 = randomAgent
+    if player1 == 'userAgent': return
+    # if player1 == 'psai': agent_play_1 = psai
+    if player1 == 'psai': agent_play_1 = randomAgent  # CHANGE
+    if player1 == 'randomAgent': agent_play_1 = randomAgent
+    if player2 == 'userAgent': return
+    if player2 == 'psai': agent_play_2 = psai
+    if player2 == 'randomAgent': agent_play_2 = randomAgent
+
+    startTime = time.time()
+    winners = {}
+    winners["1"] = 0
+    winners["-1"] = 0
+    winners["0"] = 0  # Collecting stats of the games
+
+    performance = list()
+
+    print("Playing " + str(simNumber) + " between" + str(player1) + "1 and " + str(player2) + "-1")
+
+    wins = 0
+    nEpochs = 1_000
+    for g in range(simNumber):
+
+        print("playing game number: " + str(g))
+        if g % nEpochs == 0:
+            performance = bg.log_status(g, wins, performance, nEpochs)
+            wins = 0
+
+        winner, board = bg.play_a_game(agent_play_1, agent_play_2, user=False, show=False)  # g, commentary=False)
+        # bg.play_a_game(player1, player2, gui, False, None, False, show=show, user_exists = user_exists) # g, commentary=False)
+
+        winners[str(winner)] += 1
+        wins += (bg.winner == 1)
+
+    print("Out of", simNumber, "games,")
+    print("player", 1, "won", winners["1"], "times and")
+    print("player", -1, "won", winners["-1"], "times and")
+    print(winners["0"], " games were a draw")
+    runTime = time.time() - startTime
+    print("runTime:", runTime)
+    print("average time:", runTime / simNumber)
+    bg.plot_perf(performance)
+
+
 def get_sim_no(value: str):
     """
     This function returns the text input widget (number of simulations).
     :param value: The widget value
     :return: int
     """
+    global simNumber
     no = '{0}'.format(value)
     print("Number of Simulations: {0}".format(value))
     try:
@@ -73,7 +130,7 @@ def get_sim_no(value: str):
         print("Invalid user input. Number of Simulations must be an integer.")
         print("Default used: 100")
         no = 100
-    return no
+    simNumber = no
 
 def set_player(value, playerno):
     """
@@ -113,7 +170,7 @@ def main(user=False, show=False):
     menu.add.selector('Player 2 :', [('randomAgent', 2), ('psai', 2), ('userAgent', 2)], onchange=set_player)
 
     menu.add.button('Play', start_game)
-    menu.add.button('Simulate', print())
+    menu.add.button('Simulate', simulate)
     menu.add.button('Quit', pygame_menu.events.EXIT)
     menu.add.text_input('No. Simulations: ', default='100', maxchar=10, onreturn=get_sim_no)
 

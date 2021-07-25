@@ -34,8 +34,6 @@ print('Model initialized with parameters:','\n'*2, config, '\n'*2)
 DQN = keras.Sequential()
 DQN.add(layers.Dense(64, input_shape=(49,), kernel_initializer='random_uniform', activation='tanh'))
 DQN.add(layers.Dense(32, activation='tanh'))
-DQN.add(layers.Dense(16, activation='tanh'))
-DQN.add(layers.Dense(8, activation='tanh'))
 DQN.add(layers.Dense(1, activation='sigmoid'))
 
 #DQN = keras.Sequential([
@@ -62,6 +60,17 @@ saved_models = []
 print("Network architecture: \n", DQN)
 
 # ------------------------------- Helper functions ---------------------------------
+def loadModel(name):
+    if name == '64_32_1_tanh_sig':
+        DQN = keras.Sequential()
+        DQN.add(layers.Dense(64, input_shape=(49,), kernel_initializer='random_uniform', activation='tanh'))
+        DQN.add(layers.Dense(32, activation='tanh'))
+        DQN.add(layers.Dense(1, activation='sigmoid'))
+        DQN.compile(optimizer='Adam', loss='mse')
+        DQN_target = tf.keras.models.clone_model(DQN)
+        DQN_target.compile(optimizer='Adam', loss='mse')
+        DQN.load_weights('/weights/64_32_1_tanh_sig/DQN_600000')
+
 
 def flip_board(board_copy):
     #flips the game board and returns a new copy
@@ -93,9 +102,6 @@ def game_over_update(board, reward):
     target = np.array([[reward]])
     S = np.array([board_2_state(board, 1)])
     replay_buffer.push(S, None, reward, S, target, done=True)
-
-def loadModel(file):
-    DQN.load_weights(file)
 
 def action(board_copy,dice,player,i, train=False,train_config=None):
 

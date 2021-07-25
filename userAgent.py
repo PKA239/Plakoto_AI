@@ -30,6 +30,27 @@ def setDice(_dice):
     global dice
     dice = _dice
 
+def hasPossibleMove(board, player):
+    for i in range(1,25):
+        if board[i] > 0 and player == 1 and dice[0] != -1 and i - dice[0] >= -1 and board[i-dice[0]] >= -1:
+            return True
+        if board[i] > 0 and player == 1 and dice[1] != -1 and i - dice[1] >= -1 and board[i-dice[1]] >= -1:
+            return True
+        if board[i] > 0 and player == 1 and dice[0] != -1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0 and i - dice[0] <= 0:
+            return True
+        if board[i] > 0 and player == 1 and dice[1] != -1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0 and i - dice[1] <= 0:
+            return True
+
+        if board[i] < 0 and player == -1 and dice[0] != -1 and i + dice[0] <= 1 and board[i-dice[0]] >= -1:
+            return True
+        if board[i] < 0 and player == -1 and dice[1] != -1 and i - dice[1] <= 1 and board[i-dice[1]] >= -1:
+            return True
+        if board[i] < 0 and player == -1 and dice[0] != -1 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0 and i + dice[0] >= 25:
+            return True
+        if board[i] < 0 and player == -1 and dice[1] != -1 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0 and i + dice[1] >= 25:
+            return True
+    return False
+
 def handleInput(pos, board, player, dice):
     Plakoto_game.pretty_print(board)
     global startpos
@@ -59,7 +80,7 @@ def handleInput(pos, board, player, dice):
         if startpos == -1 and board[pos] >= 1:
             startpos = pos
             print("startpos gesetzt ", startpos)
-        elif dice[0] != -1 and pos == startpos - dice[0]:
+        elif dice[0] != -1 and pos == startpos - dice[0] and pos >= 1:
             if board[pos] >= -1 and board[pos+24] != 1:
                 endpos = pos
                 valid = True
@@ -71,7 +92,7 @@ def handleInput(pos, board, player, dice):
                 startpos = -1
                 endpos = -1
 
-        elif dice[1] != -1 and pos == startpos - dice[1]:
+        elif dice[1] != -1 and pos == startpos - dice[1] and pos >= 1:
             if board[pos] >= -1 and board[pos+24] != 1:
                 endpos = pos
                 valid = True
@@ -80,12 +101,12 @@ def handleInput(pos, board, player, dice):
                 startpos = -1
                 endpos = -1
 
-        elif dice[0] != -1 and pos < 1 and startpos - dice[0] < 1:
+        elif dice[0] != -1 and pos < 1 and startpos - dice[0] < 1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0:
             #chosen dice ergänzen
             endpos = 49
             valid = True
             dice[0] = -1
-        elif dice[1] != -1 and pos < 1 and startpos - dice[1] < 1:
+        elif dice[1] != -1 and pos < 1 and startpos - dice[1] < 1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0:
             endpos = 49
             valid = True
             dice[1] = -1
@@ -98,7 +119,7 @@ def handleInput(pos, board, player, dice):
     elif player == -1:
         if startpos == -1 and board[pos] <= -1:
             startpos = pos
-        elif dice[0] != -1 and pos == startpos + dice[0]:
+        elif dice[0] != -1 and pos == startpos + dice[0] and pos <= 24:
             if board[pos] <= 1 and board[pos+24] != -1:
                 endpos = pos
                 valid = True
@@ -110,7 +131,7 @@ def handleInput(pos, board, player, dice):
                 startpos = -1
                 endpos = -1
 
-        elif dice[1] != -1 and pos == startpos + dice[1]:
+        elif dice[1] != -1 and pos == startpos + dice[1] and pos <= 24:
             if board[pos] <= 1 and board[pos+24] != -1:
                 endpos = pos
                 valid = True
@@ -121,13 +142,13 @@ def handleInput(pos, board, player, dice):
                 print("deleting positions3")
                 startpos = -1
                 endpos = -1
-        elif dice[0] != -1 and pos > 24 and startpos + dice[0] > 24:
+        elif dice[0] != -1 and pos > 24 and startpos + dice[0] > 24 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0:
             endpos = 50
             valid = True
             dice[0] = -1
             # chosen dice
             #chosendice[move_no] = endpos
-        elif dice[1] != -1 and pos > 24 and startpos + dice[1] > 24:
+        elif dice[1] != -1 and pos > 24 and startpos + dice[1] > 24 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0:
             endpos = 50
             valid = True
             dice[1] = -1
@@ -154,11 +175,13 @@ def user_action(board_copy,player,i):
 
     #eventloop(user_exists)
     # check out the legal moves available for the throw
-    possible_moves, possible_boards = bg.legal_moves(board_copy, dice, player)
-    print("possible movees: ", possible_moves)
-    print("Possible moves:\n", possible_moves)
-    # if there are no moves available
-    if len(possible_moves) == 0:
+    #possible_moves, possible_boards = bg.legal_moves(board_copy, dice, player)
+    #print("possible movees: ", possible_moves)
+    #print("Possible moves:\n", possible_moves)
+    ## if there are no moves available
+    #if len(possible_moves) == 0:
+    #    return []
+    if not hasPossibleMove(board_copy, player):
         return []
 
     #--------- Eventloop of user_action ----------------------------------------
@@ -188,5 +211,5 @@ def user_action(board_copy,player,i):
             #        print("Shortened dice: ", dice)
             #        handleInput(move_no, position, board_copy, player, [np.nan, dice])
 
-    print([startpos, endpos])
-    return [startpos, endpos], dice
+    print("usaragent move: ", [startpos, endpos])
+    return [startpos, endpos]
