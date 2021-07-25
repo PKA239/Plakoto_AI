@@ -29,7 +29,7 @@ import Plakoto_game as bg
 import classGUI
 import randomAgent
 import userAgent
-import psai
+#import psai
 
 
 
@@ -67,6 +67,18 @@ def start_game():
         
         print("Winner: ", winner)
     menu.mainloop(gui.screenMenu)
+
+def set_sim_results(score1 = 0, score2 = 0, draw = 0):
+    global menu
+
+
+    score1, score2, draw = simulate()
+    menu.add.label("\n ", font_size=24)
+    menu.add.label("Simulation results ", font_size=24)
+    menu.add.label("Score Player 1:" + str(score1),  font_size=20)
+    menu.add.label("Score Player 2:" + str(score2),  font_size=20)
+    menu.add.label("Draw :" + str(draw), font_size=20)
+    pygame.display.update()
 
 simNumber = 100
 def simulate():
@@ -114,6 +126,8 @@ def simulate():
     print("average time:", runTime / simNumber)
     bg.plot_perf(performance)
 
+    return(winners["1"],  winners["-1"], winners["0"])
+
 
 def get_sim_no(value: str):
     """
@@ -132,14 +146,17 @@ def get_sim_no(value: str):
         no = 100
     simNumber = no
 
+
 def set_player(value, playerno):
     """
     Changes player according to user input on menu.
     """
     print("value: ", value)
     print("playerno: ", playerno)
+
     global player1
     global player2
+
     if playerno == 1:
         player1 = value[0][0]
     else:
@@ -150,12 +167,16 @@ player1 = 'randomAgent'
 player2 = 'randomAgent'
 
 gui = classGUI.Gui()
+
 menu = pygame_menu.Menu('Backgammon Plakoto', gui.width, gui.height,
                             theme=pygame_menu.themes.THEME_DARK)
+
+
 def main(user=False, show=False):
     # Initialize Pygame
     global player1
     global player2
+    global menu
     pygame.init()
     pygame.display.init()
     clock = pygame.time.Clock()
@@ -168,12 +189,11 @@ def main(user=False, show=False):
 
     menu.add.selector('Player 1 :', [('randomAgent', 1), ('psai', 1), ('userAgent', 1)], onchange=set_player)
     menu.add.selector('Player 2 :', [('randomAgent', 2), ('psai', 2), ('userAgent', 2)], onchange=set_player)
-
     menu.add.button('Play', start_game)
-    menu.add.button('Simulate', simulate)
-    menu.add.button('Quit', pygame_menu.events.EXIT)
+    menu.add.button('Simulate', set_sim_results)
     menu.add.text_input('No. Simulations: ', default='100', maxchar=10, onreturn=get_sim_no)
-
+    menu.add.label("\n ", font_size=10)
+    menu.add.button('Quit', pygame_menu.events.EXIT)
     menu.mainloop(gui.screenMenu)
 
     startTime = time.time()
