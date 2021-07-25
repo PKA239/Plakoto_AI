@@ -40,13 +40,22 @@ def start_game():
     print("starting game")
     agent_play_1 = randomAgent
     agent_play_2 = randomAgent
-    if player1 == 'userAgent': agent_play_1 = userAgent
-    #if player1 == 'psai': agent_play_1 = psai
-    if player1 == 'psai': agent_play_1 = randomAgent #CHANGE
-    if player1 == 'randomAgent': agent_play_1 = randomAgent
-    if player2 == 'userAgent': agent_play_2 = userAgent
-    if player2 == 'psai': agent_play_2 = psai
-    if player2 == 'randomAgent': agent_play_2 = randomAgent
+
+    if player1 == 'userAgent':
+        agent_play_1 = userAgent
+    if player1 == 'psai':
+        agent_play_1 = psai
+        agent_play_1.loadModel('64_32_1_tanh_sig')
+    if player1 == 'randomAgent':
+        agent_play_1 = randomAgent
+
+    if player2 == 'userAgent':
+        agent_play_1 = userAgent
+    if player2 == 'psai':
+        agent_play_2 = psai
+        agent_play_2.loadModel('64_32_1_tanh_sig')
+    if player2 == 'randomAgent':
+        agent_play_1 = randomAgent
 
     if player1 == 'userAgent' or player2 == 'userAgent':
         print("starting game using user agent")

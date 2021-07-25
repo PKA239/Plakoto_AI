@@ -69,7 +69,7 @@ def loadModel(name):
         DQN.compile(optimizer='Adam', loss='mse')
         DQN_target = tf.keras.models.clone_model(DQN)
         DQN_target.compile(optimizer='Adam', loss='mse')
-        DQN.load_weights('/weights/DQN_2000000_20210705T003309Z_001/DQN_2000000')
+        DQN.load_weights('/weights/64_32_1_tanh_sig/DQN_600000')
 
 
 def flip_board(board_copy):
