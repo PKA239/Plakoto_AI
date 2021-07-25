@@ -26,10 +26,13 @@ import time
 def init_board():
     # initializes the game board
     board = np.zeros(51)#29
-    board[1] = -15 #gelb startet oben links
-    board[24] = 15 #schwarz startet unten links
-    
-    # schwarz 1
+    #board[1] = -15 #gelb startet obven links
+    #board[24] = 15 #schwarz startet unten links
+    board[1] = -15 #gelb startet obven links
+    board[2] = 15 #schwarz startet unten links
+    #board[23] = -15  # gelb startet obven links
+    #board[24] = 15 #schwarz startet unten links
+    #schwarz 1
     # gelb -1
     return board
 
@@ -196,13 +199,11 @@ def update_board(board, move, player):
         startPip = move[0]
         endPip = move[1]
 
-        # moving the dead piece if the move kills a piece
+        #Einen Stein blockieren
         block = board_to_update[endPip]==(-1*player)
         if block:
             board_to_update[endPip] = 0
-            #jail = 25+(player==1)
             blockpos = endPip + 24
-            #board_to_update[jail] = board_to_update[jail] - player
             board_to_update[blockpos] = - player
         
         board_to_update[startPip] = board_to_update[startPip]-1*player
@@ -224,12 +225,6 @@ def valid_move(move,board_copy,dice,player,i):
     return True
 
 
-def roll_dice():
-    # rolls 2 dice
-    dice = np.random.randint(1,7,2)
-
-    return dice
-
 isUserTurn = False
 def play_a_game( player1, player2, train=False, train_config=None, commentary = False, show =False, user = False):
     board = init_board() # initialize the board
@@ -247,33 +242,22 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
         for i in range(1+int(dice[0] == dice[1])):
             board_copy = np.copy(board)
 
-            #Fall User direkt behandeln, statt in die routine einbinden. Das verhalten ist zu unterschiedlich
-            print("player1: ",player1.isUserAgent())
-            print("player2: ",player2.isUserAgent())
-            print('player: ', player)
-
             if  (player1.isUserAgent() and player == 1) or (player2.isUserAgent() and player == -1):
-
 
                 if player1.isUserAgent() and player == 1:
                     action_player = player1
                 if player2.isUserAgent() and player == -1:
                     action_player = player2
 
-                # x, y =  eventloop(user_exists)
-               
-                #Move one
-                #print("move 1")
-                move_no = 0
+                action_player.setDice(dice)
                 Plakoto.gui.showBoard(board, dice, rect=False)
-                move = action_player.user_action(move_no, board_copy, dice, player, i)
+                print("dice before action: ", dice)
+                move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
                 board_copy = np.copy(board)
-                #Move 2
-                #print("move 2")
-                move_no = 1
-                move = action_player.user_action(move_no, board_copy, dice, player, i)
+
+                move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 Plakoto.gui.showBoard(board, dice, rect=False)
 

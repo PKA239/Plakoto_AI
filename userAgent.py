@@ -20,26 +20,31 @@ import Plakoto
 startpos = -1
 endpos = -1
 valid=False
-chosendice = [-1, -1]
+dice = [-1, -1]
 
 def isUserAgent():
     return True
 
-def handleInput(move_no, pos, board, player, dice):
+
+def setDice(_dice):
+    global dice
+    dice = _dice
+
+def handleInput(pos, board, player, dice):
     Plakoto_game.pretty_print(board)
     global startpos
     global endpos
     global valid
-  
+
     #startposition setzen
     
     #For debugging-------------------
-    
+
     print("\n")
     print("startpos", startpos)
-    print("board", board)
-    print("pos", pos)
-    print("board[pos]", board[pos])
+    #print("board", board)
+    #print("pos", pos)
+    #print("board[pos]", board[pos])
     #-------------------------------
 
     if pos == None:
@@ -47,56 +52,92 @@ def handleInput(move_no, pos, board, player, dice):
         startpos = -1
         endpos = -1
         return
-        
+
+    print("dice1: ", dice[1])
     if player == 1:
         #if sum(board[7:25]>0):
         if startpos == -1 and board[pos] >= 1:
             startpos = pos
             print("startpos gesetzt ", startpos)
-        elif pos == startpos - dice[0] or pos == startpos - dice[1] and pos:
+        elif dice[0] != -1 and pos == startpos - dice[0]:
             if board[pos] >= -1 and board[pos+24] != 1:
                 endpos = pos
                 valid = True
-                chosendice[move_no] = startpos - pos
+                dice[0] = -1
+                #chosendice[move_no] = startpos - pos
                 print("final position set. ", endpos)
-                #print("dice chosen: ", chosendice)               
-                #print("Next move!")
 
             else:
-                print("deleting positions1")
                 startpos = -1
                 endpos = -1
-        elif pos < 1 and startpos - dice[0] < 1 or pos < 1 and startpos - dice[1] < 1:
+
+        elif dice[1] != -1 and pos == startpos - dice[1]:
+            if board[pos] >= -1 and board[pos+24] != 1:
+                endpos = pos
+                valid = True
+                dice[1] = -1
+            else:
+                startpos = -1
+                endpos = -1
+
+        elif dice[0] != -1 and pos < 1 and startpos - dice[0] < 1:
+            #chosen dice ergänzen
             endpos = 49
-            chosendice[move_no] = endpos
-        
+            valid = True
+            dice[0] = -1
+        elif dice[1] != -1 and pos < 1 and startpos - dice[1] < 1:
+            endpos = 49
+            valid = True
+            dice[1] = -1
+
         else:
             print("deleting positions2")
             startpos = -1
             endpos = -1
 
     elif player == -1:
-        if startpos == -1 and board[pos] <= -1: startpos = pos
-        elif pos == startpos + dice[0] or pos == startpos + dice[1]:
+        if startpos == -1 and board[pos] <= -1:
+            startpos = pos
+        elif dice[0] != -1 and pos == startpos + dice[0]:
             if board[pos] <= 1 and board[pos+24] != -1:
                 endpos = pos
                 valid = True
-                chosendice[move_no] = endpos
-               
+                dice[0] = -1
+                #chosendice[move_no] = pos - startpos
+
             else:
                 print("deleting positions3")
                 startpos = -1
                 endpos = -1
-        elif not sum(board[1:19] > 0) and pos > 24 and startpos + dice[0] > 24 or pos > 24 and startpos + dice[1] > 24:
+
+        elif dice[1] != -1 and pos == startpos + dice[1]:
+            if board[pos] <= 1 and board[pos+24] != -1:
+                endpos = pos
+                valid = True
+                dice[1] = -1
+                #chosendice[move_no] = pos - startpos
+
+            else:
+                print("deleting positions3")
+                startpos = -1
+                endpos = -1
+        elif dice[0] != -1 and pos > 24 and startpos + dice[0] > 24:
             endpos = 50
-            chosendice[move_no] = endpos
-            
+            valid = True
+            dice[0] = -1
+            # chosen dice
+            #chosendice[move_no] = endpos
+        elif dice[1] != -1 and pos > 24 and startpos + dice[1] > 24:
+            endpos = 50
+            valid = True
+            dice[1] = -1
+
         else:
             print("deleting positions4")
             startpos = -1
             endpos = -1
 
-def user_action(move_no, board_copy,dice,player,i):
+def user_action(board_copy,player,i):
     # user agent
     # inputs are the board, the dice and which player is to move
     # outputs the chosen move accordingly to mouse input
@@ -104,20 +145,21 @@ def user_action(move_no, board_copy,dice,player,i):
     global startpos
     global endpos
     global valid
-   
-    global chosendice
+    global dice
+
+    #global chosendice
     startpos = -1
     endpos = -1
     valid = False
-    
+
     #eventloop(user_exists)
     # check out the legal moves available for the throw
     possible_moves, possible_boards = bg.legal_moves(board_copy, dice, player)
+    print("possible movees: ", possible_moves)
     print("Possible moves:\n", possible_moves)
     # if there are no moves available
     if len(possible_moves) == 0:
         return []
-
 
     #--------- Eventloop of user_action ----------------------------------------
     while not valid:
@@ -127,24 +169,24 @@ def user_action(move_no, board_copy,dice,player,i):
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = pygame.mouse.get_pos()
             position = Plakoto.gui.getPosition(x, y)
-            #handleInput(position, board_copy, player, dice)
+            handleInput(position, board_copy, player, dice)
+
             #print("move_no: ", move_no)
-            if move_no == 0:
-                handleInput(move_no, position, board_copy, player, dice)
-            elif move_no == 1:
-                #print("dice", dice)
-                #print("dice chosen during last action", chosendice[0])
-                #print("where", np.where(dice == chosendice[0]))
-                dice_idx = np.where(dice == chosendice[0])[0]
-                print("dice", dice)
-                print("dice idx", dice_idx) 
-                if len(dice_idx) > 1: # doubles                    
-                    handleInput(move_no, position, board_copy, player, dice)
-                else:                    
-                    dice = np.delete(dice,dice_idx)
-                    print("Shortened dice: ", dice)
-                    handleInput(move_no, position, board_copy, player, [np.nan, dice])
+            #if move_no == 0:
+            #    handleInput(move_no, position, board_copy, player, dice)
+            #elif move_no == 1:
+            #    #print("dice", dice)
+            #    #print("dice chosen during last action", chosendice[0])
+            #    #print("where", np.where(dice == chosendice[0]))
+            #    dice_idx = np.where(dice == chosendice[0])[0]
+            #    print("dice", dice)
+            #    print("dice idx", dice_idx)
+            #    if len(dice_idx) > 1: # doubles
+            #        handleInput(move_no, position, board_copy, player, dice)
+            #    else:
+            #        dice = np.delete(dice,dice_idx)
+            #        print("Shortened dice: ", dice)
+            #        handleInput(move_no, position, board_copy, player, [np.nan, dice])
 
-
-
+    print([startpos, endpos])
     return [startpos, endpos]
