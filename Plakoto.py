@@ -38,19 +38,31 @@ def start_game():
 
     if player1 == 'userAgent':
         agent_play_1 = userAgent
-    if player1 == 'psai':
+    if player1 == 'AI (64_64_32_1_tanh)':
         agent_play_1 = psai
         agent_play_1.loadModel('64_32_1_tanh_sig')
+    if player1 == 'AI (64_32_1_relu)':
+        agent_play_1 = psai
+        agent_play_1.loadModel('64_32_1_relu')
+    if player1 == 'AI (128_1_tanh)':
+        agent_play_1 = psai
+        agent_play_1.loadModel('128_1_tanh')
     if player1 == 'randomAgent':
         agent_play_1 = randomAgent
 
     if player2 == 'userAgent':
-        agent_play_1 = userAgent
-    if player2 == 'psai':
+        agent_play_2 = userAgent
+    if player2 == 'AI (64_64_32_1_tanh)':
         agent_play_2 = psai
-        agent_play_2.loadModel('64_32_1_tanh_sig')
+        agent_play_2.loadModel('64_64_32_1_tanh')
+    if player2 == 'AI (64_32_1_relu)':
+        agent_play_2 = psai
+        agent_play_2.loadModel('64_32_1_relu')
+    if player2 == 'AI (128_1_tanh)':
+        agent_play_2 = psai
+        agent_play_2.loadModel('128_1_tanh')
     if player2 == 'randomAgent':
-        agent_play_1 = randomAgent
+        agent_play_2 = randomAgent
 
     if player1 == 'userAgent' or player2 == 'userAgent':
         print("starting game using user agent")
@@ -82,17 +94,31 @@ def simulate():
 
     if player1 == 'userAgent':
         return
-    if player1 == 'psai':
+
+    if player1 == 'AI (64_64_32_1_tanh)':
         agent_play_1 = psai
         agent_play_1.loadModel('64_32_1_tanh_sig')
+    if player1 == 'AI (64_32_1_relu)':
+        agent_play_1 = psai
+        agent_play_1.loadModel('64_32_1_relu')
+    if player1 == 'AI (128_1_tanh)':
+        agent_play_1 = psai
+        agent_play_1.loadModel('128_1_tanh')
+
     if player1 == 'randomAgent':
         agent_play_1 = randomAgent
 
     if player2 == 'userAgent':
         return
-    if player2 == 'psai':
+    if player2 == 'AI (64_64_32_1_tanh)':
         agent_play_2 = psai
         agent_play_2.loadModel('64_32_1_tanh_sig')
+    if player2 == 'AI (64_32_1_relu)':
+        agent_play_2 = psai
+        agent_play_2.loadModel('64_32_1_relu')
+    if player2 == 'AI (128_1_tanh)':
+        agent_play_2 = psai
+        agent_play_2.loadModel('128_1_tanh')
     if player2 == 'randomAgent':
         agent_play_2 = randomAgent
 
@@ -191,8 +217,8 @@ def main(user=False, show=False):
 
     if not show: gui.screen = pygame.quit()
 
-    menu.add.selector('Player 1 :', [('randomAgent', 1), ('psai', 1), ('userAgent', 1)], onchange=set_player)
-    menu.add.selector('Player 2 :', [('randomAgent', 2), ('psai', 2), ('userAgent', 2)], onchange=set_player)
+    menu.add.selector('Player 1 :', [('randomAgent', 1), ('AI (64_32_1_relu)', 1), ('AI (128_1_tanh)', 1), ('AI (64_64_32_1_tanh)', 1), ('userAgent', 1)], onchange=set_player)
+    menu.add.selector('Player 2 :', [('randomAgent', 2), ('AI (64_32_1_relu)', 2), ('AI (128_1_tanh)', 2), ('AI (64_64_32_1_tanh)', 2), ('userAgent', 2)], onchange=set_player)
     menu.add.button('Play', start_game)
     menu.add.button('Simulate', set_sim_results)
     menu.add.text_input('No. Simulations: ', default='100', maxchar=10, onreturn=get_sim_no)

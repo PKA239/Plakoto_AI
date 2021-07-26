@@ -241,27 +241,27 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
         # make a move (2 moves if the same number appears on the dice)
         for i in range(1+int(dice[0] == dice[1])):
             board_copy = np.copy(board)
-
             if  (player1.isUserAgent() and player == 1) or (player2.isUserAgent() and player == -1):
 
                 if player1.isUserAgent() and player == 1:
+                    print('set player 1')
                     action_player = player1
                 if player2.isUserAgent() and player == -1:
+                    print('set player 2')
                     action_player = player2
-
-                action_player.setDice(dice)
-                Plakoto.gui.showBoard(board, dice, rect=False)
+                dice_copy = np.copy(dice)
+                action_player.setDice(dice_copy)
+                Plakoto.gui.showBoard(board, dice_copy, rect=False)
                 move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 pretty_print(board)
-                Plakoto.gui.showBoard(board, dice, rect=False)
+                Plakoto.gui.showBoard(board, dice_copy, rect=False)
                 board_copy = np.copy(board)
 
                 move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 pretty_print(board)
                 Plakoto.gui.showBoard(board, dice, rect=False)
-
 
             else:
                 if train:
@@ -276,7 +276,6 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
                         move = player1.action(board_copy,dice,player,i)
 
                     elif player == -1:
-                        #eventloop(user_exists)
                         move = player2.action(board_copy,dice,player,i)
 
                 # check if the move is valid
@@ -299,10 +298,8 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
                 print("\n")
                 
         # switch player
-
         player = -player
 
-            
     # return the winner
     return winner(board, show), board
 

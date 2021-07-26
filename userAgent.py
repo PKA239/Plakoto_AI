@@ -29,26 +29,33 @@ def isUserAgent():
 def setDice(_dice):
     global dice
     dice = _dice
+    #to copy by value
+    #dice[0] = _dice[0]
+    #dice[1] = _dice[1]
 
 def hasPossibleMove(board, player):
-    for i in range(1,25):
-        if board[i] > 0 and player == 1 and dice[0] != -1 and i - dice[0] >= -1 and board[i-dice[0]] >= -1:
+    global dice
+    print('player in hasPossibleMove: ', player)
+    print('dice: ', dice)
+    for i in range(0,25):
+        if board[i] > 0 and player == 1 and dice[0] != -1 and board[i-dice[0]] >= -1:
             return True
-        if board[i] > 0 and player == 1 and dice[1] != -1 and i - dice[1] >= -1 and board[i-dice[1]] >= -1:
+        if board[i] > 0 and player == 1 and dice[1] != -1 and board[i-dice[1]] >= -1:
             return True
         if board[i] > 0 and player == 1 and dice[0] != -1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0 and i - dice[0] <= 0:
             return True
         if board[i] > 0 and player == 1 and dice[1] != -1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0 and i - dice[1] <= 0:
             return True
 
-        if board[i] < 0 and player == -1 and dice[0] != -1 and i + dice[0] <= 1 and board[i-dice[0]] >= -1:
+        if board[i] < 0 and player == -1 and dice[0] != -1 and board[i+dice[0]] <= 1:
             return True
-        if board[i] < 0 and player == -1 and dice[1] != -1 and i - dice[1] <= 1 and board[i-dice[1]] >= -1:
+        if board[i] < 0 and player == -1 and dice[1] != -1 and board[i+dice[1]] <= 1:
             return True
         if board[i] < 0 and player == -1 and dice[0] != -1 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0 and i + dice[0] >= 25:
             return True
         if board[i] < 0 and player == -1 and dice[1] != -1 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0 and i + dice[1] >= 25:
             return True
+    print('no possible moves')
     return False
 
 def handleInput(pos, board, player, dice):
