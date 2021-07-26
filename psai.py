@@ -74,7 +74,7 @@ def loadModel(name):
         DQN_target = tf.keras.models.clone_model(DQN)
         DQN_target.compile(optimizer='Adam', loss='mse')
         DQN.load_weights('./weights/64_64_32_1_tanh_sig/DQN_600000')
-    if name == '64_32_1_relu':
+    if name == '64_32_1_relu_1700k':
         DQN = keras.Sequential()
         DQN.add(layers.Dense(64, kernel_initializer='random_uniform', activation='relu'))
         DQN.add(layers.Dense(32, activation='relu'))
@@ -83,7 +83,25 @@ def loadModel(name):
         DQN_target = tf.keras.models.clone_model(DQN)
         DQN_target.compile(optimizer='Adam', loss='mse')
         DQN.load_weights('./weights/64_32_1_relu_1700/DQN_1700000')
-    if name == '128_1_tanh':
+    if name == '64_32_1_relu_700k':
+        DQN = keras.Sequential()
+        DQN.add(layers.Dense(64, kernel_initializer='random_uniform', activation='relu'))
+        DQN.add(layers.Dense(32, activation='relu'))
+        DQN.add(layers.Dense(1, activation='sigmoid'))
+        DQN.compile(optimizer='Adam', loss='mse')
+        DQN_target = tf.keras.models.clone_model(DQN)
+        DQN_target.compile(optimizer='Adam', loss='mse')
+        DQN.load_weights('./weights/64_32_1_relu_700k/DQN_700000')
+    if name == '64_32_1_relu_2000k':
+        DQN = keras.Sequential()
+        DQN.add(layers.Dense(64, kernel_initializer='random_uniform', activation='relu'))
+        DQN.add(layers.Dense(32, activation='relu'))
+        DQN.add(layers.Dense(1, activation='sigmoid'))
+        DQN.compile(optimizer='Adam', loss='mse')
+        DQN_target = tf.keras.models.clone_model(DQN)
+        DQN_target.compile(optimizer='Adam', loss='mse')
+        DQN.load_weights('./weights/64_32_1_relu_2000/DQN_2000000')
+    if name == '128_1_tanh_1200k':
         DQN = keras.Sequential()
         DQN.add(layers.Dense(128, kernel_initializer='random_uniform', activation='tanh'))
         DQN.add(layers.Dense(1, activation='sigmoid'))
@@ -91,6 +109,18 @@ def loadModel(name):
         DQN_target = tf.keras.models.clone_model(DQN)
         DQN_target.compile(optimizer='Adam', loss='mse')
         DQN.load_weights('./weights/128_1_tanh_1200/DQN_1200000')
+    if name == '16_8_8_8_4_4_1_relu_700k':
+        DQN = keras.Sequential()
+        DQN.add(layers.Dense(16, kernel_initializer='random_uniform', activation='tanh'))
+        DQN.add(layers.Dense(8, activation='tanh'))
+        DQN.add(layers.Dense(8, activation='tanh'))
+        DQN.add(layers.Dense(8, activation='tanh'))
+        DQN.add(layers.Dense(4, activation='tanh'))
+        DQN.add(layers.Dense(4, activation='tanh'))
+        DQN.add(layers.Dense(1, activation='sigmoid'))
+        DQN_target = tf.keras.models.clone_model(DQN)
+        DQN_target.compile(optimizer='Adam', loss='mse')
+        DQN.load_weights('./weights/16_8_8_8_4_4_1_relu_700/DQN_700000')
 
 
 def flip_board(board_copy):

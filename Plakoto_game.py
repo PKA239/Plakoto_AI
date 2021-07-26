@@ -43,10 +43,12 @@ def roll_dice():
 
 def game_over(board):
     # returns True if the game is over    
-    return board[49]==15 or board[50]==-15 \
+    over = board[49]==15 or board[50]==-15 \
            or board[24+24] == 1 and board[1] >=0 and board[1+24] != -1 \
            or board[1+24] == -1 and board[24] <=0 and board[24+24] != 1 \
            or board[24+24] == 1 and board[1+24] == -1
+    #print("is over?: ", over)
+    return over
 
 def winner(board, show = False):
     #winner 1 falls: 15 steine entfert ODER Gegener in seiner startposition blockiert und eigene startposition leer
