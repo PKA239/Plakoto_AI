@@ -23,7 +23,7 @@ class config:
     nS = 48+1 # state space demension: boardspace + isAnotherMoveComing
     eps = 0.05
     lr = 0.05
-    gamma = 0.8
+    gamma = 0.99
     # update the target network every C steps
     C = 100
     batch_size = 32
