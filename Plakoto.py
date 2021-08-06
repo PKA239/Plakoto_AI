@@ -1,6 +1,6 @@
 
 """
-Backgammon interface
+Plakoto interface
 Run this program to play a game of Backgammon
 The agent is stored in another file 
 Most (if not all) of your agent-develeping code should be written in the agent.py file
@@ -8,29 +8,17 @@ Feel free to change this file as you wish but you will only submit your agent
 so make sure your changes here won't affect his performance.
 """
 
-
 import pygame
-from pygame.locals import *
 import pygame_menu
-import numpy as np
 import time
 import os
-import matplotlib.pyplot as plt
-
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import Plakoto_game as bg
-
-#import classGUI
 import classGUI
 import randomAgent
 import userAgent
 import psai
 
-
-
-
-# ----------- The Pygame globals -------------------------------------
-# pygame.font.init()
 def start_game():
     print("starting game")
     agent_play_1 = randomAgent
@@ -179,8 +167,6 @@ def simulate():
             wins = 0
 
         winner, board = bg.play_a_game(agent_play_1, agent_play_2, user=False, show=False)  # g, commentary=False)
-        # bg.play_a_game(player1, player2, gui, False, None, False, show=show, user_exists = user_exists) # g, commentary=False)
-
         winners[str(winner)] += 1
         wins += (bg.winner == 1)
 
@@ -240,18 +226,15 @@ menu = pygame_menu.Menu('Backgammon Plakoto', gui.width, gui.height,
 
 
 def main(user=False, show=False):
-    # Initialize Pygame
     global player1
     global player2
     global menu
     pygame.init()
     pygame.display.init()
     clock = pygame.time.Clock()
-    # gui.show_thm_logo()
 
     # mainloop(clock, gui)
     # ----------------------
-
     if not show: gui.screen = pygame.quit()
 
     menu.add.selector('Player 1 :', [('randomAgent', 1), ('AI (64_32_1_relu_700k)', 1),('AI (64_32_1_relu_1700k)', 1),('AI (64_32_1_relu_2000k)', 1), ('AI (128_1_tanh_1200k)', 1), ('AI (64_64_32_1_tanh_1200k)', 1), ('AI (16_8_8_8_4_4_1_relu_700k)', 1), ('userAgent', 1)], onchange=set_player)

@@ -4,15 +4,8 @@ Created on Fri Jul  9 21:49:19 2021
 
 @author: Stephanie Kaes
 """
-import time
-
-import numpy as np
 import pygame
-from pygame.locals import *
-
 import Plakoto_game
-import Plakoto_game as bg
-#import GUI
 import Plakoto
 
              
@@ -29,14 +22,11 @@ def isUserAgent():
 def setDice(_dice):
     global dice
     dice = _dice
-    #to copy by value
-    #dice[0] = _dice[0]
-    #dice[1] = _dice[1]
 
 def hasPossibleMove(board, player):
     global dice
-    print('player in hasPossibleMove: ', player)
-    print('dice: ', dice)
+    #print('player in hasPossibleMove: ', player)
+    #print('dice: ', dice)
     for i in range(0,25):
         if board[i] > 0 and player == 1 and dice[0] != -1 and board[i-dice[0]] >= -1:
             return True
@@ -180,14 +170,6 @@ def user_action(board_copy,player,i):
     endpos = -1
     valid = False
 
-    #eventloop(user_exists)
-    # check out the legal moves available for the throw
-    #possible_moves, possible_boards = bg.legal_moves(board_copy, dice, player)
-    #print("possible movees: ", possible_moves)
-    #print("Possible moves:\n", possible_moves)
-    ## if there are no moves available
-    #if len(possible_moves) == 0:
-    #    return []
     if not hasPossibleMove(board_copy, player):
         return []
 
@@ -200,23 +182,6 @@ def user_action(board_copy,player,i):
             x, y = pygame.mouse.get_pos()
             position = Plakoto.gui.getPosition(x, y)
             handleInput(position, board_copy, player, dice)
-
-            #print("move_no: ", move_no)
-            #if move_no == 0:
-            #    handleInput(move_no, position, board_copy, player, dice)
-            #elif move_no == 1:
-            #    #print("dice", dice)
-            #    #print("dice chosen during last action", chosendice[0])
-            #    #print("where", np.where(dice == chosendice[0]))
-            #    dice_idx = np.where(dice == chosendice[0])[0]
-            #    print("dice", dice)
-            #    print("dice idx", dice_idx)
-            #    if len(dice_idx) > 1: # doubles
-            #        handleInput(move_no, position, board_copy, player, dice)
-            #    else:
-            #        dice = np.delete(dice,dice_idx)
-            #        print("Shortened dice: ", dice)
-            #        handleInput(move_no, position, board_copy, player, [np.nan, dice])
 
     print("usaragent move: ", [startpos, endpos])
     return [startpos, endpos]

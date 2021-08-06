@@ -1,9 +1,5 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
 import Plakoto_game
 from Plakoto_game import *
-import kotra
 import psai
 import randomAgent
 import time

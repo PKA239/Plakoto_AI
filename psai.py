@@ -38,11 +38,6 @@ DQN.add(layers.Dense(64, activation='relu'))
 DQN.add(layers.Dense(64, activation='relu'))
 DQN.add(layers.Dense(1, activation='sigmoid'))
 
-#DQN = keras.Sequential([
-#    layers.Dense(50, activation='relu', kernel_initializer='random_uniform', input_shape=(config.nS,)),
-#    layers.Dense(1, activation='sigmoid', kernel_initializer='random_uniform')
-#])
-
 DQN.compile(optimizer = 'Adam',loss = 'mse')
 
 
@@ -144,10 +139,13 @@ def flip_move(move):
                         36,35,34,33,32,31,30,29,28,27,26,25,
                         50,49])[m[m_i]]
     return move
+#takes board without positions 49 and 50 and appends if there is a sencond set of moves in case of a double
+board_2_state = lambda board, first_of_2: np.append(board[1:49], first_of_2)
 
-board_2_state = lambda board, first_of_2: np.append(board[1:49], first_of_2) #forst_of_two means dice
-#bearing_off   = lambda board: sum(board[7:25]>0)==0
-game_won      = lambda board: int(board[49]>=15 or (board[1+24] == -1 and board[24] <= 0 and board[24+24] != 1))
+game_won      = lambda board: int(board[49]>=15 or
+                                  board[1+24] == -1 and
+                                   board[24] <= 0 and
+                                   board[24+24] != 1)
 
 def game_over_update(board, reward):
     target = np.array([[reward]])
@@ -158,7 +156,6 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
 
     # global variables
     global counter
-    global bearing_off_counter
 
     # starts by flipping the board so that the player always sees himself as player 1
     if player == -1:
@@ -171,13 +168,12 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
     if len(possible_moves) == 0:
         return []
 
-    #if not bearing_off(board_copy):
     model = DQN
     buffer = replay_buffer
     # Current state and Q value, possible next states
     State = np.array([board_2_state(board_copy, i == 2)])  # i -> second dice?
     Q = model(State)
-    first_of_2 = 1 + (dice[0] == dice[1]) - i
+    first_of_2 = 1 + (dice[0] == dice[1]) - i #sind würfel pasch -> erster wurf von 2
     #Array aus möglichen nächsten states (boards)
     S_next = np.array([board_2_state(b, first_of_2) for b in possible_boards])  # possible next states
 
@@ -199,13 +195,12 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         target_model = DQN_target
         Q_max = target_model(S_best)
 
-        # Das Kernstück des ganzen
-        reward = game_won(possible_boards[action])  # game won on chosen state?
+
+        reward = game_won(possible_boards[action])
         targetQ = Q + config.lr * (reward + config.gamma * Q_max - Q)
-        #buffer.push(State, None, reward, S_next, targetQ, done=True)
+
+
         buffer.push(State, None, reward, S_next, targetQ, done=True)
-        # q_neu = Q + L*( Q)
-        # (tQ = r + gamma*Q(stat+1)
 
         # update the target network every C steps
         if counter % config.C == 0:
@@ -216,7 +211,10 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
             state_batch, action_batch, reward_batch, next_state_batch, target_batch, done_batch = replay_buffer.sample(
                 config.batch_size)
 
-            #das andere kernstück. model bekommt state, berechnet Q, bekommt targetQ, kann fehler berechnen und backpropagieren.
+            # train with state and target-Q
+            # model takes state and calculates Q-Value
+            # calculate loss by comparing Q-Value with given target-Q Value
+            # backpropergate and adjust weights
             DQN.train_on_batch(np.array(state_batch), np.array(target_batch))
 
         # save model every 1000_000 training moves

@@ -8,17 +8,10 @@ Created on Fri Jul  9 18:08:26 2021
 
 import numpy as np
 import matplotlib.pyplot as plt
-#import GUI
-#from GUI import showBoard
+import pygame
 import Plakoto
-import randomAgent
-import userAgent
-#import psai #CHANGE
 import time
-import os
-import time
-#import pubeval
-#import kotra
+
 
 
 
@@ -26,14 +19,8 @@ import time
 def init_board():
     # initializes the game board
     board = np.zeros(51)#29
-    board[1] = -15 #gelb startet obven links
-    board[24] = 15 #schwarz startet unten links
-    #board[1] = -15 #gelb startet obven links
-    #board[2] = 15 #schwarz startet unten links
-    #board[23] = -15  # gelb startet obven links
-    #board[24] = 15 #schwarz startet unten links
-    #schwarz 1
-    # gelb -1
+    board[1] = -15 #yellow starts top
+    board[24] = 15 #black starts bottom
     return board
 
 def roll_dice():
@@ -47,11 +34,10 @@ def game_over(board):
            or board[24+24] == 1 and board[1] >=0 and board[1+24] != -1 \
            or board[1+24] == -1 and board[24] <=0 and board[24+24] != 1 \
            or board[24+24] == 1 and board[1+24] == -1
-    #print("is over?: ", over)
     return over
 
 def winner(board, show = False):
-    #winner 1 falls: 15 steine entfert ODER Gegener in seiner startposition blockiert und eigene startposition leer
+    #winner 1 if: 15 checkers beared off OR Opponents mother checker is blocked and own mother checker left starting position
 
     #aus sicht von 1
     if board[49] == 15 or (board[1+24] == -1 and board[24] <= 0 and board[24+24] != 1):
@@ -122,7 +108,7 @@ def legal_move(board, die, player):
                 elif not game_over(board): # smá fix
                     # everybody's past the dice throw?
                     s = np.min(np.where(board[19:25]<0)[0])
-                    if (6-s)<die:   #stein mit zu hohem wurf entfernen, falls nicht anders möglich
+                    if (6-s)<die:   #bear off if dice is higher than checker position
                         possible_moves.append(np.array([19+s,50]))
 
             # finding all other legal options
@@ -130,7 +116,7 @@ def legal_move(board, die, player):
             for s in possible_start_pips:
                 end_pip = s+die
                 if end_pip < 25:
-                    if board[end_pip] < 2 and board[end_pip + 24] != player: #freies feld oder einzelner gegner
+                    if board[end_pip] < 2 and board[end_pip + 24] != player: #empty position or single opponent checker
                         possible_moves.append(np.array([s,end_pip]))
         
     return possible_moves
@@ -219,14 +205,6 @@ def update_board(board, move, player):
 
     return board_to_update
 
-def valid_move(move,board_copy,dice,player,i):
-    # pretty_print(board_copy)
-    # print("dice", dice)
-    # print(move)
-    # print(type(move))
-    return True
-
-
 isUserTurn = False
 def play_a_game( player1, player2, train=False, train_config=None, commentary = False, show =False, user = False):
     board = init_board() # initialize the board
@@ -234,6 +212,7 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
 
     # play on
     while not game_over(board) and not check_for_error(board):
+        if show: pygame.event.get()
         if commentary: print("lets go player ",player)
         
         # roll dice
