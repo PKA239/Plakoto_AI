@@ -87,13 +87,13 @@ class Gui():
         self.dice6 = pygame.image.load('dice6.png')
         self.dice6 = pygame.transform.scale(self.dice6, (60, 60))
         # self.mark = pygame.image.load('mark.png')
-        self.mark = pygame.image.load('thm.png')
-        self.largeMark = pygame.transform.scale(self.mark, (85, 50))
-        self.smallMark = pygame.transform.scale(self.mark, (55, 50))
+        self.mark = pygame.image.load('mark.png')
+        self.largeMark = pygame.transform.scale(self.mark, (86, 15))
+        self.smallMark = pygame.transform.scale(self.mark, (58, 15))
         # self.markUpsideDown = pygame.image.load('mark2.png')
-        self.markUpsideDown = pygame.image.load('thm.png')
-        self.largeMarkUpsideDown = pygame.transform.scale(self.markUpsideDown, (85, 50))
-        self.smallMarkUpsideDown = pygame.transform.scale(self.markUpsideDown, (55, 50))
+        self.markUpsideDown = pygame.image.load('mark2.png')
+        self.largeMarkUpsideDown = pygame.transform.scale(self.markUpsideDown, (86, 15))
+        self.smallMarkUpsideDown = pygame.transform.scale(self.markUpsideDown, (58, 15))
 
     def hoverloop(self, x, y):
         pos = self.getHoverPosition(x, y)
@@ -130,7 +130,7 @@ class Gui():
         if self.rect25.collidepoint(x, y): return 25
         if self.rect0.collidepoint(x, y): return 0
 
-    def showBoard(self, board, dice, rect=False):
+    def showBoard(self, board, dice, player, rect=False, mark=-1):
         def putChecker(color, x, y):
             if color == -1: self.screen.blit(self.whiteChecker, (x, y))
             if color == 1: self.screen.blit(self.blackChecker, (x, y))
@@ -151,6 +151,36 @@ class Gui():
             if eyes == 4: self.screen.blit(self.dice4, (640, 331))
             if eyes == 5: self.screen.blit(self.dice5, (643, 336))
             if eyes == 6: self.screen.blit(self.dice6, (640, 330))
+
+        def putMark(pos):
+            if pos == 24 : self.screen.blit(self.largeMark, (40, 680)) #24
+            elif pos == 23: self.screen.blit(self.smallMark, (151, 680))  # 23
+            elif pos == 22: self.screen.blit(self.largeMark, (230, 680))  # 22
+            elif pos == 21: self.screen.blit(self.smallMark, (342, 680))  # 21
+            elif pos == 20: self.screen.blit(self.largeMark, (422, 680))  # 20
+            elif pos == 19: self.screen.blit(self.smallMark, (532, 680))  # 19
+
+            elif pos == 18: self.screen.blit(self.largeMark, (675, 680))  # 18
+            elif pos == 17: self.screen.blit(self.smallMark, (785, 680))  # 17
+            elif pos == 16: self.screen.blit(self.largeMark, (866, 680))  # 16
+            elif pos == 15: self.screen.blit(self.smallMark, (979, 680))  # 15
+            elif pos == 14: self.screen.blit(self.largeMark, (1058, 680))  # 14
+            elif pos == 13: self.screen.blit(self.smallMark, (1168, 680))  # 13
+
+            elif pos == 1: self.screen.blit(self.smallMarkUpsideDown, (53, 25))  # 1
+            elif pos == 2: self.screen.blit(self.largeMarkUpsideDown, (135, 25))  # 2
+            elif pos == 3: self.screen.blit(self.smallMarkUpsideDown, (246, 25))  # 3
+            elif pos == 4: self.screen.blit(self.largeMarkUpsideDown, (328, 25))  # 4
+            elif pos == 5: self.screen.blit(self.smallMarkUpsideDown, (435, 25))  # 5
+            elif pos == 6: self.screen.blit(self.largeMarkUpsideDown, (520, 25))  # 6
+
+            elif pos == 7: self.screen.blit(self.smallMarkUpsideDown, (690, 25))  # 7
+            elif pos == 8: self.screen.blit(self.largeMarkUpsideDown, (772, 25))  # 8
+            elif pos == 9: self.screen.blit(self.smallMarkUpsideDown, (880, 25))  # 9
+            elif pos == 10: self.screen.blit(self.largeMarkUpsideDown, (966, 25))  # 10
+            elif pos == 11: self.screen.blit(self.smallMarkUpsideDown, (1071, 25))  # 11
+            elif pos == 12: self.screen.blit(self.largeMarkUpsideDown, (1153, 25))  # 12
+
 
         self.screen.fill([255, 255, 255])
         self.screen.blit(self.boardImg, (0, 0))
@@ -175,8 +205,8 @@ class Gui():
             if board[i] > 0: color = 1
             for j in range(0, round(abs(board[i]))):
                 if j == 6:
-                    text = self.font.render(str(round(abs(board[i]))), False, (255, 100, 100))
-                    self.screen.blit(text, (x + 10, y - 40))
+                    text = self.font.render(str(round(abs(board[i]))), False, (255, 255, 255))
+                    self.screen.blit(text, (x + 13, y - 40))
                     break
                 putChecker(color, x, y)
                 y += 50
@@ -201,14 +231,15 @@ class Gui():
             if board[i] > 0: color = 1
             for j in range(0, round(abs(board[i]))):
                 if j == 6:
-                    text = self.font.render(str(round(abs(board[i]))), False, (255, 100, 100))
-                    self.screen.blit(text, (x + 10, y + 60))
+                    text = self.font.render(str(round(abs(board[i]))), False, (255, 255, 255))
+                    self.screen.blit(text, (x + 13, y + 60))
                     break
                 putChecker(color, x, y)
                 y -= 50
 
             x -= 95
 
+        #draws clickable boxes for spikes
         if rect:
             pygame.draw.rect(self.screen, (255, 0, 0, 100), self.rect1)
             pygame.draw.rect(self.screen, (255, 0, 0, 100), self.rect2)
@@ -236,6 +267,15 @@ class Gui():
             pygame.draw.rect(self.screen, (255, 0, 0, 100), self.rect24)
             pygame.draw.rect(self.screen, (255, 0, 0, 100), self.rect0)
             pygame.draw.rect(self.screen, (255, 0, 0, 100), self.rect25)
+
+        if player == 1:
+            pygame.draw.circle(self.screen, (80, 80, 100), (550, 360), 5)
+        elif player == -1:
+            pygame.draw.circle(self.screen, (255, 125, 0), (550, 360), 5)
+
+        print("mark: ", mark)
+        if mark != -1:
+            putMark(mark)
 
         pygame.display.flip()
 

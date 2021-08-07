@@ -9,7 +9,9 @@ import Plakoto_game
 import Plakoto
 
              
-#-------------The user Agent -----------------------------------------    
+#-------------The user Agent -----------------------------------------
+import classGUI
+
 startpos = -1
 endpos = -1
 valid=False
@@ -67,6 +69,7 @@ def handleInput(pos, board, player, dice):
 
     if pos == None:
         print("deleting positions1")
+        Plakoto.gui.showBoard(board, dice, player)
         startpos = -1
         endpos = -1
         return
@@ -76,6 +79,7 @@ def handleInput(pos, board, player, dice):
         #if sum(board[7:25]>0):
         if startpos == -1 and board[pos] >= 1:
             startpos = pos
+            Plakoto.gui.showBoard(board, dice, player, mark=pos)
             print("startpos gesetzt ", startpos)
         elif dice[0] != -1 and pos == startpos - dice[0] and pos >= 1:
             if board[pos] >= -1 and board[pos+24] != 1:
@@ -88,6 +92,7 @@ def handleInput(pos, board, player, dice):
             else:
                 startpos = -1
                 endpos = -1
+                Plakoto.gui.showBoard(board, dice, player)
 
         elif dice[1] != -1 and pos == startpos - dice[1] and pos >= 1:
             if board[pos] >= -1 and board[pos+24] != 1:
@@ -97,6 +102,7 @@ def handleInput(pos, board, player, dice):
             else:
                 startpos = -1
                 endpos = -1
+                Plakoto.gui.showBoard(board, dice, player)
 
         elif dice[0] != -1 and pos < 1 and startpos - dice[0] < 1 and sum(board[7:25]>0) == 0 and sum(board[25:49]>0) == 0:
             #chosen dice ergänzen
@@ -112,10 +118,12 @@ def handleInput(pos, board, player, dice):
             print("deleting positions2")
             startpos = -1
             endpos = -1
+            Plakoto.gui.showBoard(board, dice, player)
 
     elif player == -1:
         if startpos == -1 and board[pos] <= -1:
             startpos = pos
+            Plakoto.gui.showBoard(board, dice, player, mark=pos)
         elif dice[0] != -1 and pos == startpos + dice[0] and pos <= 24:
             if board[pos] <= 1 and board[pos+24] != -1:
                 endpos = pos
@@ -127,6 +135,7 @@ def handleInput(pos, board, player, dice):
                 print("deleting positions3")
                 startpos = -1
                 endpos = -1
+                Plakoto.gui.showBoard(board, dice, player)
 
         elif dice[1] != -1 and pos == startpos + dice[1] and pos <= 24:
             if board[pos] <= 1 and board[pos+24] != -1:
@@ -139,12 +148,12 @@ def handleInput(pos, board, player, dice):
                 print("deleting positions3")
                 startpos = -1
                 endpos = -1
+                Plakoto.gui.showBoard(board, dice, player)
         elif dice[0] != -1 and pos > 24 and startpos + dice[0] > 24 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0:
             endpos = 50
             valid = True
             dice[0] = -1
-            # chosen dice
-            #chosendice[move_no] = endpos
+
         elif dice[1] != -1 and pos > 24 and startpos + dice[1] > 24 and sum(board[1:19]<0) == 0 and sum(board[25:49]<0) == 0:
             endpos = 50
             valid = True
@@ -154,6 +163,7 @@ def handleInput(pos, board, player, dice):
             print("deleting positions4")
             startpos = -1
             endpos = -1
+            Plakoto.gui.showBoard(board, dice, player)
 
 def user_action(board_copy,player,i):
     # user agent

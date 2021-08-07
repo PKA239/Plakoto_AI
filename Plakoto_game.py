@@ -232,17 +232,17 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
                     action_player = player2
                 dice_copy = np.copy(dice)
                 action_player.setDice(dice_copy)
-                Plakoto.gui.showBoard(board, dice_copy, rect=False)
+                Plakoto.gui.showBoard(board, dice_copy, player, rect=False)
                 move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 pretty_print(board)
-                Plakoto.gui.showBoard(board, dice_copy, rect=False)
+                Plakoto.gui.showBoard(board, dice_copy, player, rect=False)
                 board_copy = np.copy(board)
 
                 move = action_player.user_action(board_copy, player, i)
                 board = update_board(board, move, player)
                 pretty_print(board)
-                Plakoto.gui.showBoard(board, dice, rect=False)
+                Plakoto.gui.showBoard(board, dice, player, rect=False)
 
             else:
                 if train:
@@ -269,7 +269,7 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
                     for m in move:
                         board = update_board(board, m, player)
                         if show:
-                            Plakoto.gui.showBoard(board, dice)
+                            Plakoto.gui.showBoard(board, dice, player)
                             time.sleep(0.5)
 
             # give status after every move:
