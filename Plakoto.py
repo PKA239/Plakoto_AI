@@ -244,7 +244,10 @@ def main(user=False, show=False):
     menu.add.text_input('No. Simulations: ', default='100', maxchar=10, onreturn=get_sim_no)
     menu.add.label("\n ", font_size=10)
     menu.add.button('Quit', pygame_menu.events.EXIT)
+    menu.add.label("by Paul K. Christof & Stephanie Käs", font_size=10)
+
     menu.mainloop(gui.screenMenu)
+
 
 if __name__ == '__main__':
     main(user=True, show=True)
