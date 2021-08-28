@@ -42,3 +42,37 @@ Für die Fälle, dass es nur einen möglichen Zug, oder gar keinen gibt, kann di
 Für den Fall eines Pasches, darf ein Spieler mit demselben Augenpaar zweimal rücken.
 In diesem Fall wird der Agent zweimal aufgefordert, seine Spielzüge zu bestimmen.
 Er gibt nicht etwa eine einzelne Liste von vier Zügen zurück.
+
+## Die Dateien
+### Plakoto.py
+In Plakoto.py ist das Hauptmenü angelegt.
+Von dort aus werden pygame gestartet, die Agents ausgewählt und die Spiele oder Simulationen gestartet.
+
+### Plakoto_game.py
+In Plakoto_game.py ist die Spiellogik implementiert.
+Hier läuft die Hauptroutine eines Spieles ab.
+In dieser werden abwechselnd die Züge der Agents abgefragt.
+
+### classGUI.py
+classGUI.py implementiert die grafische Oberfläche.
+Hier wird das Spielbrett mit Checkern und Würfeln gezeichnet und die jeweiligen Bilder dafür geladen.
+
+
+### psai.py
+psai ist der Agent für Plakoto.
+Hier befindet sich der Code für das zu trainiernde Netz,
+für die Auswahl von Zügen und für das Deep-Q-Learning.
+
+### userAgent.py
+userAgent.py ist ein Agent, der beim Spielen eines Benutzers verwendet wird.
+Er erfasst die Eingaben, die der Benutzer während des eigenen Zuges tätigt
+und gibt diese als Liste der gewählten Züge zurück.
+Schwerpunkt ist es außerdem, dem Benutzer ein grafisches Feedback zum Stand seines Zuges zu geben.
+Das geschieht durch das Setzen und Löschen von blauen Markern an den Startpositionen eines Zuges.
+
+### randomAgent.py
+randomAgent.py ist ein einfacher Agent, der einen zufälligen korrekten Zug zurückgibt.
+Der randomAgent wird als Gegenspieler zur Bewertung trainierter Agents benutzt.
+
+### train.py
+train.py enthält Funktionen zum trainieren und evaluieren eines Agents.
