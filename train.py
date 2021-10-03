@@ -5,6 +5,10 @@ import randomAgent
 import time
 import pygame
 
+"""
+train.py is slightly modified from https://github.com/weekend37/Backgammon/blob/master/train.py
+"""
+
 def plot_perf(performance):
     plt.plot(performance)
     plt.show()
