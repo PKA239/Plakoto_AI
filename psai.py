@@ -152,7 +152,7 @@ def flip_move(move):
     return move
 #takes board without positions 49 and 50 and appends if there is a sencond set of moves in case of a double
 board_2_state = lambda board, first_of_2: np.append(board[1:49], first_of_2)
-W
+
 game_won      = lambda board: int(board[49]>=15 or
                                   board[1+24] == -1 and
                                    board[24] <= 0 and
@@ -174,11 +174,7 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
     """
     inputs are the board, the dice and which player is to move
     outputs the chosen move accordingly to its policy
-    Source: https://github.com/weekend37/Backgammon/blob/master/kotra.py
-    """
-
-    """
-    The following code is mostly copied from https://github.com/weekend37/Backgammon/blob/master/kotra.py
+    Source (mostly copied but modified): https://github.com/weekend37/Backgammon/blob/master/kotra.py
     """
 
     # global variables
