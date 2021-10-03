@@ -10,7 +10,6 @@ import Plakoto
 
              
 #-------------The user Agent -----------------------------------------
-import classGUI
 
 startpos = -1
 endpos = -1

@@ -1,16 +1,8 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import randomAgent
-import userAgent
 import pygame
 from pygame.locals import *
-import psai
-import os
 import time
-import Plakoto
-import Plakoto_game as bg
 import pygame_menu
-#import GUI
 
 
 class Gui():
@@ -61,7 +53,6 @@ class Gui():
         self.height = 720
         player1 = randomAgent
         player2 = randomAgent
-        # self.screen = pygame.display.set_mode((self.width, self.height))
 
         # Prepare the window's title bar
         pygame.display.set_caption('Backgammon - Plakoto')
@@ -273,7 +264,6 @@ class Gui():
         elif player == -1:
             pygame.draw.circle(self.screen, (255, 125, 0), (550, 360), 5)
 
-        print("mark: ", mark)
         if mark != -1:
             putMark(mark)
 
@@ -284,55 +274,7 @@ class Gui():
         self.startImg = pygame.transform.scale(self.startImg, (1280, 720))
         self.screen.fill([255, 255, 255])
         self.screen.blit(self.startImg, (0, 0))
-        # text = self.font.render("Klick to start the game.", False, (255, 100, 100))
-        # self.screen.blit(text, (100, 100))
         pygame.display.flip()
 
         time.sleep(0.4)
-        # pygame.display.update()
 
-
-
-    # ------------ Event loop -----------------------------------------------
-    # def eventloop_help(event):
-    #    # General check
-    #    if (event.type == MOUSEBUTTONUP):
-    #        None
-    #
-    #    elif event.type == pygame.QUIT:
-    #        pygame.quit()
-    #
-    #    elif (event.type == pygame.K_u):
-    #        pygame.display.update()
-
-    def eventloop(self, user=False):
-        # Event loop
-        x = np.nan
-        y = np.nan
-        continue_loop = True
-
-        while continue_loop:
-            for event in pygame.event.get():
-
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-                # elif event.type == pygame.MOUSEBUTTONDOWN and self.UserTurn:
-                #    mouse_presses = pygame.mouse.get_pressed(0)
-                #    # Only if left mouse key is pressed, the input is considered valid
-                #    if mouse_presses[0]:
-                #        x, y = pygame.mouse.get_pos()
-                #        position = gui.getPosition(x, y)
-                #        userAgent.receivePos(position)
-
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_presses = pygame.mouse.get_pressed()
-                    # Only if left mouse key is pressed, the input is considered valid
-                    if mouse_presses[0]:
-                        print("Left Mouse key was clicked")
-                        x, y = pygame.mouse.get_pos()
-                        print("Position of mousebuttons", x, y)
-                        continue_loop = False
-                        return x, y
-                    elif mouse_presses[0] == False:
-                        print("Please left-click on a field.")

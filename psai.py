@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-The intelligent agent
-see flipped_agent for an example of how to flip the board in order to always
-perceive the board as player 1
+The intelligent agent.
+The code for this agent was copied from https://github.com/weekend37/Backgammon/blob/master/kotra.py
+and then edited.
+Many of the functions have been rewritten to work with plakoto instead of backgammon.
+A function to load trained models has been added to.
+The most essential code for deep-q-learning stayed the same and is marked.
 """
 import numpy as np
 
@@ -19,6 +22,7 @@ from basic_buffer import BasicBuffer
 def isUserAgent():
     return False
 
+#>>>>>>>>>>>>>> Config is copied >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 class config:
     nS = 48+1 # state space demension: boardspace + isAnotherMoveComing
     eps = 0.05
@@ -28,6 +32,7 @@ class config:
     C = 100
     batch_size = 32
     D_max = 1000
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 print('Model initialized with parameters:','\n'*2, config, '\n'*2)
 
@@ -154,6 +159,8 @@ def game_over_update(board, reward):
 
 def action(board_copy,dice,player,i, train=False,train_config=None):
 
+#>>>> The following code is mostly copied from https://github.com/weekend37/Backgammon/blob/master/kotra.py >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
     # global variables
     global counter
 
@@ -239,3 +246,5 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         move = flip_move(move)
 
     return move
+
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

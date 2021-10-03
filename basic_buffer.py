@@ -2,6 +2,7 @@ from collections import deque
 import random
 import numpy as np
 
+# code from https://github.com/weekend37/Backgammon basic_buffer.py
 class BasicBuffer:
 
     def __init__(self, max_size):

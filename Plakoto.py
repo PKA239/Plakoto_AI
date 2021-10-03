@@ -147,6 +147,8 @@ def simulate():
     if player2 == 'randomAgent':
         agent_play_2 = randomAgent
 
+# marked code snipped copied and edited from https://github.com/weekend37/Backgammon
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     startTime = time.time()
     winners = {}
     winners["1"] = 0
@@ -180,6 +182,7 @@ def simulate():
     bg.plot_perf(performance)
 
     return(winners["1"],  winners["-1"], winners["0"])
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 def get_sim_no(value: str):
