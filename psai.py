@@ -34,6 +34,8 @@ class config:
     D_max = 1000
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
+
+
 print('Model initialized with parameters:','\n'*2, config, '\n'*2)
 
 # Policy Network | Deep Q-network
@@ -153,11 +155,20 @@ game_won      = lambda board: int(board[49]>=15 or
                                    board[24+24] != 1)
 
 def game_over_update(board, reward):
+    """
+    if game over, receive reward
+    partially taken from: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
     target = np.array([[reward]])
     S = np.array([board_2_state(board, 1)])
     replay_buffer.push(S, None, reward, S, target, done=True)
 
 def action(board_copy,dice,player,i, train=False,train_config=None):
+    """
+    inputs are the board, the dice and which player is to move
+    outputs the chosen move accordingly to its policy
+    Source: https://github.com/weekend37/Backgammon/blob/master/kotra.py
+    """
 
 #>>>> The following code is mostly copied from https://github.com/weekend37/Backgammon/blob/master/kotra.py >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
