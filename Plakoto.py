@@ -8,7 +8,7 @@ Created on Fri Jul  9 18:08:26 2021
 Plakoto interface
 Run this program to play a game of Backgammon
 The agent is stored in another file 
-Most (if not all) of your agent-develeping code should be written in the agent.py file
+Most (if not all) of your agent-developing code should be written in the agent.py file
 Feel free to change this file as you wish but you will only submit your agent 
 so make sure your changes here won't affect his performance.
 """
