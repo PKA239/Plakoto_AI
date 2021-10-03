@@ -2,7 +2,7 @@
 """
 Created on Fri Jul  9 21:49:19 2021
 
-@author: Stephanie Kaes
+@author: Stephanie Kaes, Paul K. Christof
 """
 import pygame
 import Plakoto_game

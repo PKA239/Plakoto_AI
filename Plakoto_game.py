@@ -2,9 +2,8 @@
 """
 Created on Fri Jul  9 18:08:26 2021
 
-@author: Stephanie Kaes
+@author: Stephanie Kaes, Paul K. Christof
 """
-
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,6 +16,9 @@ import time
 
 
 def init_board():
+    """
+    initializes the game board
+    """
     # initializes the game board
     board = np.zeros(51)#29
     board[1] = -15 #yellow starts top
@@ -24,6 +26,10 @@ def init_board():
     return board
 
 def roll_dice():
+    """
+    rolls the dice
+    source: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
     # rolls the dice
     dice = np.random.randint(1,7,2)
     return dice
@@ -57,7 +63,11 @@ def winner(board, show = False):
 
 
 def check_for_error(board):
-    # checks for obvious errors
+    """
+    checks for obvious errors
+    source: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
+
     errorInProgram = False
     
     if (sum(board[board>0]) != 15 or sum(board[board<0]) != -15):
@@ -67,16 +77,26 @@ def check_for_error(board):
     return errorInProgram
     
 def pretty_print(board):
+    """
+    pretty output in terminal
+    source: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
     string = str(np.array2string(board[1:13])+'\n'+
                 np.array2string(board[24:12:-1])+'\n'+
                 np.array2string(board[49:51]))
     print("board: \n", string)
-    
+    print("board:", board)
         
 def legal_move(board, die, player):
-    # finds legal moves for a board and one dice
-    # inputs are some BG-board, the number on the die and which player is up
-    # outputs all the moves (just for the one die)
+    """
+    finds legal moves for a board and one dice
+    inputs are some BG-board, the number on the die and which player is up
+    outputs all the moves (just for the one die)
+
+    partially taken from: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    altered to fit the Plakoto rules
+
+    """
     possible_moves = []
 
     if player == 1:
@@ -122,9 +142,14 @@ def legal_move(board, die, player):
     return possible_moves
 
 def legal_moves(board, dice, player):
-    # finds all possible moves and the possible board after-states
-    # inputs are the BG-board, the dices rolled and which player is up
-    # outputs the possible pair of moves (if they exists) and their after-states
+    """
+    finds all possible moves and the possible board after-states
+    inputs are the BG-board, the dices rolled and which player is up
+    outputs the possible pair of moves (if they exists) and their after-states
+
+    source: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+
+    """
 
     moves = []
     boards = []
@@ -166,6 +191,10 @@ def legal_moves(board, dice, player):
     return moves, boards 
 
 def is_legal_move(move,board_copy,dice,player,i):
+    """
+    check if move is legal
+    source: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
     if len(move)==0: 
         return True
     global possible_moves
@@ -177,9 +206,12 @@ def is_legal_move(move,board_copy,dice,player,i):
     return True
 
 def update_board(board, move, player):
-    # updates the board
-    # inputs are some board, one move and the player
-    # outputs the updated board
+    """
+    updates the board
+    inputs are some board, one move and the player
+    outputs the updated board
+    partially taken from: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
     board_to_update = np.copy(board) 
 
     # if the move is there
@@ -207,6 +239,12 @@ def update_board(board, move, player):
 
 isUserTurn = False
 def play_a_game( player1, player2, train=False, train_config=None, commentary = False, show =False, user = False):
+    """
+       plays a game
+       partially taken from: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+       but significantly altered to fit our architecture with different agents, user input and gui
+    """
+
     board = init_board() # initialize the board
     player = np.random.randint(2)*2-1 # which player begins?
 
@@ -285,11 +323,17 @@ def play_a_game( player1, player2, train=False, train_config=None, commentary = 
     return winner(board, show), board
 
 def plot_perf(performance):
+    """
+      source: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
     plt.plot(performance)
     plt.show()
     return
 
 def log_status(g, wins, performance, nEpochs):
+    """
+          source: https://github.com/weekend37/Backgammon/blob/master/Backgammon.py
+    """
     if g == 0:
         return performance
     print("game number", g)
