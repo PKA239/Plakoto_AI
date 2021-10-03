@@ -21,8 +21,9 @@ from basic_buffer import BasicBuffer
 
 def isUserAgent():
     return False
-
-#>>>>>>>>>>>>>> Config is copied >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+"""
+The Config and the creation of the model is strongly inspired by https://github.com/weekend37/Backgammon/blob/master/kotra.py
+"""
 class config:
     nS = 48+1 # state space demension: boardspace + isAnotherMoveComing
     eps = 0.05
@@ -32,7 +33,6 @@ class config:
     C = 100
     batch_size = 32
     D_max = 1000
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 print('Model initialized with parameters:','\n'*2, config, '\n'*2)
 
@@ -123,6 +123,10 @@ def loadModel(name):
         DQN.load_weights('./weights/16_8_8_8_4_4_1_relu_700/DQN_700000')
 
 
+"""
+flip_board and flip_move are inspired by https://github.com/weekend37/Backgammon/blob/master/kotra.py
+but had to be changed in order to work with the 50-position state that we use for plakoto.
+"""
 def flip_board(board_copy):
     #flips the game board and returns a new copy
     idx = np.array([0,24,23,22,21,20,19,18,17,16,15,14,13,
@@ -146,12 +150,15 @@ def flip_move(move):
     return move
 #takes board without positions 49 and 50 and appends if there is a sencond set of moves in case of a double
 board_2_state = lambda board, first_of_2: np.append(board[1:49], first_of_2)
-
+W
 game_won      = lambda board: int(board[49]>=15 or
                                   board[1+24] == -1 and
                                    board[24] <= 0 and
                                    board[24+24] != 1)
 
+"""
+https://github.com/weekend37/Backgammon/blob/master/kotra.py
+"""
 def game_over_update(board, reward):
     target = np.array([[reward]])
     S = np.array([board_2_state(board, 1)])
@@ -159,7 +166,9 @@ def game_over_update(board, reward):
 
 def action(board_copy,dice,player,i, train=False,train_config=None):
 
-#>>>> The following code is mostly copied from https://github.com/weekend37/Backgammon/blob/master/kotra.py >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    """
+    The following code is mostly copied from https://github.com/weekend37/Backgammon/blob/master/kotra.py
+    """
 
     # global variables
     global counter
@@ -246,5 +255,3 @@ def action(board_copy,dice,player,i, train=False,train_config=None):
         move = flip_move(move)
 
     return move
-
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
